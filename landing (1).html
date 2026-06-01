@@ -1,0 +1,2702 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>staged.ai — Home staging AI per il mercato immobiliare italiano</title>
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GT-M6JNKV3');</script>
+<!-- End Google Tag Manager -->
+
+<!-- Microsoft Clarity -->
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","wifg72oiw0");</script>
+<!-- End Microsoft Clarity -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+
+<!-- ─── Firebase 10.12 (modular) — loaded as ES module, exposes globals on window ─── -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // Same Firebase project as the configurator
+  const firebaseConfig = {
+    apiKey: "AIzaSyANmCpxue93WPqCahwfYvbMvXF8lZx53L8",
+    authDomain: "staged-ai.firebaseapp.com",
+    projectId: "staged-ai",
+    storageBucket: "staged-ai.firebasestorage.app",
+    messagingSenderId: "833352316081",
+    appId: "1:833352316081:web:abcdef"
+  };
+  const fbApp = initializeApp(firebaseConfig);
+  window._fbAuth     = getAuth(fbApp);
+  window._fbDb       = getFirestore(fbApp);
+  window._fbDoc      = doc;
+  window._fbGetDoc   = getDoc;
+  window._fbSetDoc   = setDoc;
+  window._fbServerTS = serverTimestamp;
+  window._fbSendSignInLinkToEmail = sendSignInLinkToEmail;
+  window._fbIsSignInWithEmailLink = isSignInWithEmailLink;
+  window._fbSignInWithEmailLink   = signInWithEmailLink;
+  window._fbReady = true;
+  // Notify the rest of the page if it's already loaded
+  document.dispatchEvent(new CustomEvent('fbready'));
+</script>
+
+<style>
+  /* ── tokens ─────────────────────────────────────────────── */
+  :root {
+    --bg:        #0f0f0e;
+    --surface:   #1a1a18;
+    --surface-2: #232320;
+    --surface-3: #2a2a26;
+    --line:      #2a2a26;
+    --line-2:    #353530;
+    --ink:       #f4efe6;
+    --ink-mute:  #b8b1a3;
+    --ink-dim:   #807b71;
+    --gold:      #c9a86c;
+    --gold-soft: #b8995c;
+    --gold-faint:#3a2f1a;
+    --green:     #7fa872;
+    --red:       #c97a6c;
+    --r-sm: 6px;
+    --r-md: 10px;
+    --r-lg: 14px;
+    --shadow-1: 0 1px 0 rgba(255,255,255,0.03) inset, 0 24px 60px -30px rgba(0,0,0,0.7);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection { background: var(--gold); color: var(--bg); }
+
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  input, textarea { font: inherit; color: inherit; }
+
+  .wrap { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 28px; }
+
+  /* ── nav ────────────────────────────────────────────────── */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(15,15,14,0.78);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 68px;
+  }
+  .brand {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: "Playfair Display", serif;
+    font-size: 20px; letter-spacing: 0.01em;
+  }
+  .brand-mark {
+    width: 26px; height: 26px; border-radius: 4px;
+    background: var(--gold);
+    position: relative;
+    display: inline-block;
+  }
+  .brand-mark::after {
+    content: ""; position: absolute; inset: 5px 5px 5px 9px;
+    border-left: 1.5px solid var(--bg);
+    border-bottom: 1.5px solid var(--bg);
+  }
+  .brand em { font-style: italic; color: var(--gold); font-weight: 400; }
+  .nav-links { display: flex; gap: 28px; align-items: center; font-size: 14px; color: var(--ink-mute); }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta {
+    padding: 9px 16px; border-radius: 999px;
+    border: 1px solid var(--line-2);
+    font-size: 13px; color: var(--ink); font-weight: 500;
+    transition: border-color .2s, background .2s;
+  }
+  .nav-cta:hover { border-color: var(--gold); }
+  @media (max-width: 720px) {
+    .nav-links { display: none; }
+  }
+
+  /* ── hero ───────────────────────────────────────────────── */
+  .hero { padding: 96px 0 56px; position: relative; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 6px 12px; border-radius: 999px;
+    border: 1px solid var(--line-2);
+    background: var(--surface);
+    font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 28px;
+  }
+  .hero-eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 0 4px rgba(201,168,108,0.18);
+  }
+  .hero h1 {
+    font-family: "Playfair Display", serif;
+    font-weight: 500;
+    font-size: clamp(40px, 6vw, 72px);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    margin: 0 0 22px;
+    max-width: 880px;
+    text-wrap: balance;
+  }
+  .hero h1 em { font-style: italic; color: var(--gold); font-weight: 400; }
+  .hero-sub {
+    font-size: 18px; color: var(--ink-mute);
+    max-width: 580px;
+    line-height: 1.55;
+    margin: 0 0 36px;
+    text-wrap: pretty;
+  }
+  .hero-meta {
+    display: flex; gap: 28px; flex-wrap: wrap;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+    margin-top: 42px;
+    font-size: 13px; color: var(--ink-dim);
+  }
+  .hero-meta b { color: var(--ink); font-weight: 500; }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 14px 22px; border-radius: 8px;
+    background: var(--gold); color: var(--bg);
+    font-weight: 600; font-size: 15px;
+    transition: transform .15s ease, background .2s;
+  }
+  .btn-primary:hover { background: #d6b577; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary .arrow {
+    width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center;
+  }
+
+  /* ── studio (la demo vera) ──────────────────────────────── */
+  .studio-section {
+    padding: 24px 0 80px;
+    scroll-margin-top: 80px;
+  }
+  .studio {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-1);
+    overflow: hidden;
+  }
+  .studio-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, rgba(255,255,255,0.012), transparent);
+  }
+  .studio-title {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 13px; color: var(--ink-mute); letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .studio-title .live {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 3px rgba(127,168,114,0.18);
+  }
+  .studio-title b { color: var(--ink); font-weight: 500; letter-spacing: 0.04em; }
+  .studio-step-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 5px 10px; border-radius: 999px;
+    background: var(--surface-2); border: 1px solid var(--line-2);
+    font-size: 12px; color: var(--ink-mute); letter-spacing: 0.04em;
+  }
+  .studio-step-tag .num {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--gold); color: var(--bg);
+    font-weight: 700; font-size: 11px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+
+  .studio-body { padding: 28px 24px 32px; }
+
+  /* upload */
+  .upload {
+    border: 1.5px dashed var(--line-2);
+    border-radius: var(--r-md);
+    background: var(--surface-2);
+    padding: 56px 28px;
+    text-align: center;
+    transition: border-color .2s, background .2s;
+    cursor: pointer;
+    position: relative;
+  }
+  .upload:hover, .upload.drag-over {
+    border-color: var(--gold);
+    background: rgba(201,168,108,0.04);
+  }
+  .upload .icon {
+    width: 44px; height: 44px; margin: 0 auto 16px;
+    border-radius: 50%;
+    background: var(--surface-3);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold);
+  }
+  .upload h3 {
+    font-family: "Playfair Display", serif;
+    font-weight: 500;
+    font-size: 22px; margin: 0 0 6px;
+  }
+  .upload p { color: var(--ink-mute); font-size: 14px; margin: 0; }
+  .upload .hint {
+    margin-top: 14px; font-size: 12px; color: var(--ink-dim);
+    letter-spacing: 0.04em;
+  }
+  .upload input[type="file"] { display: none; }
+
+  .upload-preview {
+    display: none;
+    align-items: center; gap: 16px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--surface-2);
+  }
+  .upload-preview.show { display: flex; }
+  .upload-preview .thumb {
+    width: 76px; height: 76px; border-radius: 6px;
+    background-size: cover; background-position: center;
+    flex-shrink: 0;
+    border: 1px solid var(--line-2);
+  }
+  .upload-preview .meta { flex: 1; min-width: 0; }
+  .upload-preview .meta b { font-weight: 500; display: block; }
+  .upload-preview .meta span { font-size: 13px; color: var(--ink-mute); }
+  .upload-preview .change {
+    font-size: 13px; color: var(--gold); cursor: pointer; padding: 8px 12px;
+    border: 1px solid var(--line-2); border-radius: 6px;
+    transition: border-color .2s;
+  }
+  .upload-preview .change:hover { border-color: var(--gold); }
+
+  /* params */
+  .params {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 720px) {
+    .params { grid-template-columns: 1fr; gap: 22px; }
+    .studio-body { padding: 22px 18px 26px; }
+    .studio-head { padding: 16px 18px; }
+  }
+
+  .field label {
+    display: block;
+    font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink-mute); font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .field label .req { color: var(--gold); }
+
+  .input-wrap { position: relative; }
+  .input {
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--surface-2);
+    border: 1px solid var(--line-2);
+    border-radius: var(--r-sm);
+    color: var(--ink);
+    font-size: 15px;
+    transition: border-color .15s, background .15s;
+  }
+  .input:focus { outline: none; border-color: var(--gold); background: var(--surface); }
+  .input::placeholder { color: var(--ink-dim); }
+
+  .autocomplete {
+    position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--surface);
+    border: 1px solid var(--line-2);
+    border-radius: var(--r-sm);
+    max-height: 240px; overflow-y: auto;
+    z-index: 10;
+    display: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+  .autocomplete.show { display: block; }
+  .autocomplete .item {
+    padding: 10px 14px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex; justify-content: space-between;
+    color: var(--ink-mute);
+  }
+  .autocomplete .item:hover, .autocomplete .item.active {
+    background: var(--surface-2); color: var(--ink);
+  }
+  .autocomplete .item .region {
+    font-size: 11px; color: var(--ink-dim); letter-spacing: 0.04em; text-transform: uppercase;
+  }
+
+  .chips {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 12px;
+  }
+  .chip {
+    padding: 7px 13px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    border: 1px solid var(--line-2);
+    font-size: 13px; color: var(--ink-mute);
+    transition: all .15s;
+  }
+  .chip:hover { color: var(--ink); border-color: var(--ink-dim); }
+  .chip.active {
+    background: var(--gold-faint);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* generate row */
+  .generate-row {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 18px; flex-wrap: wrap;
+  }
+  .generate-info {
+    font-size: 13px; color: var(--ink-dim);
+  }
+  .generate-info b { color: var(--ink-mute); font-weight: 500; }
+  .btn-generate {
+    padding: 14px 26px;
+    background: var(--gold); color: var(--bg);
+    border-radius: 8px;
+    font-weight: 600; font-size: 15px;
+    display: inline-flex; align-items: center; gap: 12px;
+    transition: background .2s, transform .15s;
+  }
+  .btn-generate:hover:not(:disabled) { background: #d6b577; transform: translateY(-1px); }
+  .btn-generate:disabled { background: var(--surface-3); color: var(--ink-dim); cursor: not-allowed; }
+
+  /* loading state */
+  .loading-stage {
+    display: none;
+    padding: 80px 24px;
+    text-align: center;
+    border-top: 1px solid var(--line);
+    background: linear-gradient(180deg, var(--surface), var(--bg));
+  }
+  .loading-stage.show { display: block; }
+  .loading-orb {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    margin: 0 auto 28px;
+    background: radial-gradient(circle at 30% 30%, var(--gold), var(--gold-faint) 70%);
+    box-shadow: 0 0 60px rgba(201,168,108,0.35);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(0.85); opacity: 0.7; }
+  }
+  .loading-msg {
+    font-family: "Playfair Display", serif;
+    font-size: 22px; font-style: italic;
+    color: var(--ink); margin-bottom: 8px;
+    transition: opacity .3s;
+    min-height: 30px;
+  }
+  .loading-progress {
+    width: 240px; height: 2px;
+    background: var(--surface-3);
+    border-radius: 2px;
+    margin: 28px auto 0;
+    overflow: hidden;
+  }
+  .loading-progress-bar {
+    height: 100%; width: 0%;
+    background: var(--gold);
+    transition: width .4s;
+  }
+  .loading-stages {
+    margin-top: 24px;
+    font-size: 12px; color: var(--ink-dim);
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+
+  /* result */
+  .result-stage { display: none; }
+  .result-stage.show { display: block; }
+
+  .result-head {
+    padding: 22px 24px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 16px;
+    background: linear-gradient(180deg, rgba(201,168,108,0.04), transparent);
+  }
+  .result-title {
+    font-family: "Playfair Display", serif;
+    font-size: 22px; font-weight: 500;
+    margin: 0;
+  }
+  .result-title em { font-style: italic; color: var(--gold); font-weight: 400; }
+  .result-actions { display: flex; gap: 10px; }
+  .ghost-btn {
+    padding: 8px 14px;
+    border: 1px solid var(--line-2);
+    border-radius: 6px;
+    font-size: 13px; color: var(--ink-mute);
+    transition: border-color .15s, color .15s;
+  }
+  .ghost-btn:hover { border-color: var(--gold); color: var(--ink); }
+
+  /* before/after */
+  .before-after {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+  }
+  @media (max-width: 720px) {
+    .before-after { grid-template-columns: 1fr; }
+  }
+  .ba-pane {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: var(--surface-2);
+    overflow: hidden;
+  }
+  .ba-img {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+  }
+  .ba-label {
+    position: absolute; top: 16px; left: 16px;
+    padding: 6px 12px;
+    background: rgba(15,15,14,0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink);
+  }
+  .ba-label.after-tag {
+    color: var(--gold);
+    border-color: rgba(201,168,108,0.4);
+  }
+  .ba-corner {
+    position: absolute; bottom: 16px; right: 16px;
+    font-size: 11px; color: rgba(244,239,230,0.6);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    letter-spacing: 0.06em;
+  }
+
+  /* uplift badge bar */
+  .uplift-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 24px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--line);
+    gap: 16px; flex-wrap: wrap;
+  }
+  .uplift-bar .left { display: flex; align-items: center; gap: 14px; }
+  .uplift-icon {
+    width: 38px; height: 38px; border-radius: 8px;
+    background: var(--gold-faint);
+    color: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .uplift-text { font-size: 14px; color: var(--ink-mute); }
+  .uplift-text b { color: var(--ink); font-weight: 500; }
+  .uplift-pct {
+    font-family: "Playfair Display", serif;
+    font-size: 32px; font-weight: 500;
+    color: var(--gold);
+  }
+  .uplift-pct sup { font-size: 18px; opacity: 0.7; }
+  .uplift-base {
+    font-size: 12px; color: var(--ink-dim); letter-spacing: 0.04em;
+  }
+
+  /* interventions */
+  .interventions {
+    padding: 28px 24px;
+  }
+  .interventions h4 {
+    font-family: "Playfair Display", serif;
+    font-size: 18px; font-weight: 500;
+    margin: 0 0 4px;
+  }
+  .interventions .sub {
+    font-size: 13px; color: var(--ink-dim); margin-bottom: 22px;
+  }
+  .interv-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 720px) {
+    .interv-grid { grid-template-columns: 1fr; }
+  }
+  .interv {
+    padding: 20px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    transition: border-color .2s;
+  }
+  .interv:hover { border-color: var(--line-2); }
+  .interv-num {
+    font-family: "Playfair Display", serif;
+    font-style: italic;
+    font-size: 14px; color: var(--gold);
+    margin-bottom: 12px; letter-spacing: 0.04em;
+  }
+  .interv-title {
+    font-size: 16px; font-weight: 500;
+    margin: 0 0 6px;
+  }
+  .interv-desc {
+    font-size: 13px; color: var(--ink-mute); line-height: 1.5;
+    margin: 0 0 14px;
+  }
+  .interv-cost {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+  .interv-cost .label {
+    font-size: 11px; color: var(--ink-dim); letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .interv-cost .price {
+    font-size: 17px; font-weight: 500; color: var(--ink);
+  }
+  .interv-cost .price em {
+    font-family: "Playfair Display", serif;
+    font-style: italic; color: var(--gold);
+    font-weight: 400; font-size: 13px;
+    margin-left: 4px;
+  }
+
+  /* CTA register */
+  .register-section {
+    padding: 56px 0;
+  }
+  .register-card {
+    background: linear-gradient(180deg, var(--surface) 0%, #1c1916 100%);
+    border: 1px solid var(--line-2);
+    border-radius: var(--r-lg);
+    padding: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .register-card::before {
+    content: ""; position: absolute;
+    top: -100px; right: -100px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,108,0.12), transparent 60%);
+    pointer-events: none;
+  }
+  @media (max-width: 720px) {
+    .register-card { grid-template-columns: 1fr; padding: 32px 24px; gap: 28px; }
+  }
+  .register-eyebrow {
+    font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 16px;
+  }
+  .register-card h2 {
+    font-family: "Playfair Display", serif;
+    font-weight: 500;
+    font-size: clamp(28px, 3.5vw, 40px);
+    line-height: 1.1; margin: 0 0 16px;
+    text-wrap: balance;
+  }
+  .register-card h2 em { font-style: italic; color: var(--gold); font-weight: 400; }
+  .register-card p {
+    font-size: 15px; color: var(--ink-mute);
+    margin: 0; line-height: 1.6;
+  }
+  .register-form {
+    display: grid; gap: 14px;
+    position: relative; z-index: 1;
+  }
+  .register-form .input { background: var(--bg); }
+  .register-form .btn-primary { width: 100%; justify-content: center; padding: 16px; }
+  .register-perks {
+    margin-top: 14px;
+    font-size: 12px; color: var(--ink-dim);
+    display: flex; gap: 14px; flex-wrap: wrap;
+  }
+  .register-perks span { display: inline-flex; align-items: center; gap: 6px; }
+  .register-perks svg { color: var(--gold); }
+
+  /* ── NEW (landing v2): metrics grid, disclaimer, error, post-email ─── */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 20px 0 12px;
+  }
+  @media (max-width: 640px) { .metrics-grid { grid-template-columns: 1fr; } }
+  .metric-card {
+    background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface) 100%);
+    border: 1px solid var(--gold-faint);
+    border-radius: var(--r-lg);
+    padding: 18px 18px;
+    position: relative;
+  }
+  .metric-card.compact { padding: 14px 16px; }
+  .metric-icon {
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    width: 36px; height: 36px;
+    background: rgba(201, 168, 108, 0.12);
+    border: 1px solid rgba(201, 168, 108, 0.25);
+    border-radius: 8px;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .metric-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--ink-dim);
+    margin-bottom: 6px;
+  }
+  .metric-value {
+    font-family: "Playfair Display", serif;
+    font-weight: 500;
+    font-size: 28px;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .metric-value em { font-style: italic; color: var(--gold); font-weight: 400; }
+  .metric-sub {
+    font-size: 12px;
+    color: var(--ink-mute);
+    line-height: 1.4;
+  }
+  .invest-row {
+    margin-top: 14px;
+    padding: 14px 16px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--ink-mute);
+    line-height: 1.5;
+  }
+  .invest-row b { color: var(--ink); font-weight: 600; }
+  .invest-row .gold { color: var(--gold); font-weight: 600; }
+
+  .disclaimer {
+    margin-top: 16px;
+    padding: 12px 14px;
+    background: rgba(255,255,255,0.02);
+    border-left: 2px solid var(--line-2);
+    border-radius: 4px;
+    font-size: 11px;
+    line-height: 1.55;
+    color: var(--ink-dim);
+  }
+  .disclaimer b { color: var(--ink-mute); font-weight: 500; }
+  .disclaimer a { color: var(--gold-soft); text-decoration: underline; text-decoration-color: var(--gold-faint); }
+
+  .err-banner {
+    margin: 14px 0;
+    padding: 12px 14px;
+    background: rgba(201, 122, 108, 0.08);
+    border: 1px solid rgba(201, 122, 108, 0.3);
+    border-radius: var(--r-md);
+    color: var(--red);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .err-banner b { color: #e8a59a; }
+  .preset-tag {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: rgba(255,255,255,0.06);
+    color: var(--ink-dim);
+    border-radius: 4px;
+    vertical-align: middle;
+  }
+
+  .post-email-card {
+    background: var(--surface);
+    border: 1px solid var(--gold-faint);
+    border-radius: var(--r-lg);
+    padding: 28px 24px;
+    text-align: center;
+  }
+  .post-email-card .post-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 56px; height: 56px;
+    background: rgba(127, 168, 114, 0.12);
+    border: 1px solid rgba(127, 168, 114, 0.3);
+    border-radius: 50%;
+    color: var(--green);
+    margin-bottom: 14px;
+  }
+  .post-email-card h3 {
+    font-family: "Playfair Display", serif;
+    font-weight: 500;
+    font-size: 22px;
+    margin: 0 0 8px;
+  }
+  .post-email-card p {
+    color: var(--ink-mute);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 0 6px;
+    max-width: 460px;
+    margin-left: auto; margin-right: auto;
+  }
+  .post-email-card .email-shown { color: var(--gold); font-weight: 500; }
+  .post-email-card .resend-link {
+    display: inline-block;
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--ink-mute);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .post-email-card .resend-link:hover { color: var(--gold); }
+
+  /* inline error directly under the register form */
+  .reg-err {
+    display: none;
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: rgba(201, 122, 108, 0.08);
+    border: 1px solid rgba(201, 122, 108, 0.3);
+    border-radius: var(--r-md);
+    color: var(--red);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .reg-err.show { display: block; }
+  .reg-err b { color: #e8a59a; }
+  .reg-err code {
+    display: inline-block;
+    padding: 1px 6px;
+    background: rgba(0,0,0,0.35);
+    border-radius: 3px;
+    font-size: 11px;
+    font-family: ui-monospace, monospace;
+    color: #e8a59a;
+  }
+
+  /* dynamic interventions populated from Gemini analysis */
+  .interv-empty {
+    text-align: center;
+    padding: 32px 16px;
+    color: var(--ink-dim);
+    font-size: 13px;
+  }
+
+  /* use cases */
+  .usecases-section { padding: 80px 0 48px; }
+  .section-title {
+    font-family: "Playfair Display", serif;
+    font-weight: 500;
+    font-size: clamp(28px, 3.5vw, 40px);
+    line-height: 1.1;
+    margin: 0 0 12px;
+    max-width: 720px;
+    text-wrap: balance;
+  }
+  .section-title em { font-style: italic; color: var(--gold); font-weight: 400; }
+  .section-sub {
+    font-size: 16px; color: var(--ink-mute);
+    max-width: 580px;
+    margin: 0 0 40px;
+  }
+  .usecase-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 720px) {
+    .usecase-grid { grid-template-columns: 1fr; }
+  }
+  .usecase {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 28px;
+    display: flex; flex-direction: column;
+    transition: border-color .2s, transform .2s;
+  }
+  .usecase:hover { border-color: var(--line-2); transform: translateY(-2px); }
+  .usecase-icon {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    background: var(--gold-faint);
+    color: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 22px;
+  }
+  .usecase h3 {
+    font-family: "Playfair Display", serif;
+    font-size: 22px; font-weight: 500;
+    margin: 0 0 10px;
+  }
+  .usecase p {
+    font-size: 14px; color: var(--ink-mute);
+    line-height: 1.55; margin: 0 0 22px;
+  }
+  .usecase ul {
+    list-style: none; padding: 0; margin: auto 0 0;
+    border-top: 1px solid var(--line);
+    padding-top: 18px;
+    display: grid; gap: 10px;
+  }
+  .usecase ul li {
+    font-size: 13px; color: var(--ink-mute);
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .usecase ul li::before {
+    content: "—"; color: var(--gold); flex-shrink: 0;
+  }
+
+  /* reviews */
+  .reviews-section { padding: 56px 0 80px; }
+  .review-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 720px) {
+    .review-grid { grid-template-columns: 1fr; }
+  }
+  .review {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 26px;
+    display: flex; flex-direction: column;
+  }
+  .review-stars {
+    display: flex; gap: 2px; margin-bottom: 16px;
+    color: var(--gold);
+  }
+  .review-quote {
+    font-family: "Playfair Display", serif;
+    font-style: italic;
+    font-size: 17px; line-height: 1.45;
+    color: var(--ink);
+    margin: 0 0 24px;
+    flex: 1;
+    text-wrap: pretty;
+  }
+  .review-author {
+    display: flex; align-items: center; gap: 12px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--surface-3); color: var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 500; font-size: 14px;
+    flex-shrink: 0;
+  }
+  .avatar.gold { background: var(--gold-faint); color: var(--gold); }
+  .review-author b { font-weight: 500; display: block; font-size: 14px; }
+  .review-author span { font-size: 12px; color: var(--ink-dim); }
+
+  /* footer */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 40px 0 32px;
+    margin-top: 24px;
+  }
+  .foot-grid {
+    display: flex; justify-content: space-between; gap: 24px;
+    flex-wrap: wrap;
+  }
+  .foot-brand { max-width: 320px; }
+  .foot-brand p {
+    font-size: 13px; color: var(--ink-dim);
+    margin: 12px 0 0; line-height: 1.55;
+  }
+  .foot-cols {
+    display: flex; gap: 56px; flex-wrap: wrap;
+  }
+  .foot-col h5 {
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-dim); font-weight: 500;
+    margin: 0 0 14px;
+  }
+  .foot-col a {
+    display: block;
+    font-size: 13px; color: var(--ink-mute);
+    margin-bottom: 8px;
+    transition: color .15s;
+  }
+  .foot-col a:hover { color: var(--ink); }
+  .foot-bottom {
+    margin-top: 36px; padding-top: 24px;
+    border-top: 1px solid var(--line);
+    display: flex; justify-content: space-between; gap: 14px;
+    flex-wrap: wrap;
+    font-size: 12px; color: var(--ink-dim);
+  }
+
+  /* utility */
+  .hidden { display: none !important; }
+  .fade-in { animation: fadeIn .5s ease both; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* scrollbar */
+  .autocomplete::-webkit-scrollbar { width: 8px; }
+  .autocomplete::-webkit-scrollbar-thumb {
+    background: var(--surface-3); border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GT-M6JNKV3" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<!-- ─── NAV ─────────────────────────────────────────── -->
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a href="#" class="brand">
+      <span class="brand-mark"></span>
+      staged<em>.ai</em>
+    </a>
+    <div class="nav-links">
+      <a href="#studio">Demo</a>
+      <a href="#usecases">Per chi</a>
+      <a href="#reviews">Recensioni</a>
+      <a href="#" class="nav-cta">Accedi</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── HERO ────────────────────────────────────────── -->
+<section class="hero">
+  <div class="wrap">
+    <span class="hero-eyebrow">
+      <span class="dot"></span>
+      Home staging AI · Italia
+    </span>
+    <h1>
+      Trasforma una foto in un appartamento <em>che si vende.</em>
+    </h1>
+    <p class="hero-sub">
+      Carica lo scatto di una stanza vuota o da rinfrescare. In 30 secondi vedi il
+      risultato staged, gli interventi consigliati con i costi reali per la tua città
+      e l'aumento di valore stimato.
+    </p>
+    <a href="#studio" class="btn-primary" id="hero-cta">
+      Prova ora gratis
+      <span class="arrow">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+    </a>
+    <div class="hero-meta">
+      <span><b>~30 secondi</b> · per generazione</span>
+      <span><b>+4-9%</b> · valore preservato in trattativa</span>
+      <span><b>1 prova gratis</b> · poi 10 crediti registrandoti</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─── STUDIO (la demo) ────────────────────────────── -->
+<section class="studio-section" id="studio">
+  <div class="wrap">
+    <div class="studio">
+      <header class="studio-head">
+        <div class="studio-title">
+          <span class="live"></span>
+          <b>Studio staging</b> · Anteprima dal vivo
+        </div>
+        <div class="studio-step-tag" id="step-tag">
+          <span class="num" id="step-num">1</span>
+          <span id="step-label">Carica una foto</span>
+        </div>
+      </header>
+
+      <div class="studio-body" id="studio-body">
+
+        <!-- step 1: upload -->
+        <div id="upload-zone" class="upload" tabindex="0" role="button" aria-label="Carica foto">
+          <div class="icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M12 16V4M12 4l-4 4M12 4l4 4M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3>Carica una foto della stanza</h3>
+          <p>Trascina qui un'immagine o clicca per selezionarla</p>
+          <div class="hint">JPG · PNG · max 12MB · 1 foto per generazione</div>
+          <input type="file" id="file-input" accept="image/*" />
+        </div>
+
+        <div class="upload-preview" id="upload-preview">
+          <div class="thumb" id="preview-thumb"></div>
+          <div class="meta">
+            <b id="preview-name">soggiorno_appartamento.jpg</b>
+            <span id="preview-size">2.4 MB · 4032 × 3024</span>
+          </div>
+          <button class="change" id="change-btn">Cambia</button>
+        </div>
+
+        <!-- step 2: params -->
+        <div class="params">
+          <div class="field">
+            <label>Città <span class="req">*</span></label>
+            <div class="input-wrap">
+              <input type="text" class="input" id="city-input" placeholder="Inizia a scrivere — es. Mil…" autocomplete="off" />
+              <div class="autocomplete" id="city-autocomplete"></div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Stile staging <span class="req">*</span></label>
+            <input type="text" class="input" id="style-input" placeholder="Scrivi uno stile o scegli sotto" />
+            <div class="chips" id="style-chips">
+              <button type="button" class="chip" data-style="Japandi">Japandi</button>
+              <button type="button" class="chip" data-style="Scandinavo">Scandinavo</button>
+              <button type="button" class="chip" data-style="Moderno">Moderno</button>
+              <button type="button" class="chip" data-style="Classico">Classico</button>
+              <button type="button" class="chip" data-style="Minimal">Minimal</button>
+              <button type="button" class="chip" data-style="Boho">Boho</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- step 3: generate -->
+        <div class="generate-row">
+          <div class="generate-info">
+            <b>1 prova gratuita</b> · risultato in ~30 secondi · <span id="trial-status" style="color: var(--gold)">disponibile</span>
+          </div>
+          <button class="btn-generate" id="generate-btn" disabled>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 1.5l1.5 4 4 1.5-4 1.5L8 12.5 6.5 8.5l-4-1.5 4-1.5L8 1.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="currentColor" fill-opacity="0.2"/>
+            </svg>
+            Genera staging
+          </button>
+        </div>
+      </div>
+
+      <!-- LOADING -->
+      <div class="loading-stage" id="loading-stage">
+        <div class="loading-orb"></div>
+        <div class="loading-msg" id="loading-msg">Analizzo la stanza…</div>
+        <div class="loading-progress"><div class="loading-progress-bar" id="loading-bar"></div></div>
+        <div class="loading-stages" id="loading-stages">Step 1 di 4</div>
+      </div>
+
+      <!-- ERROR BANNER -->
+      <div class="err-banner" id="err-banner" style="display:none;">
+        <b>Generazione non riuscita.</b> <span id="err-text">Riprova tra un momento.</span>
+      </div>
+
+      <!-- RESULT -->
+      <div class="result-stage" id="result-stage">
+        <div class="result-head">
+          <h3 class="result-title">
+            Versione <em>staged</em> — stile <span id="result-style">Japandi</span>
+            <span class="preset-tag" id="preset-tag" style="display:none;">esempio dimostrativo</span>
+          </h3>
+          <div class="result-actions">
+            <button class="ghost-btn" id="download-btn">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="margin-right: 6px; vertical-align: -2px;">
+                <path d="M8 1v9M8 10l-3-3M8 10l3-3M2 13h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Scarica
+            </button>
+            <button class="ghost-btn" id="redo-btn">Riprova</button>
+          </div>
+        </div>
+
+        <div class="before-after">
+          <div class="ba-pane">
+            <div class="ba-img" id="ba-before"></div>
+            <div class="ba-label">Prima</div>
+            <div class="ba-corner" id="ba-before-corner">original.jpg</div>
+          </div>
+          <div class="ba-pane">
+            <div class="ba-img" id="ba-after"></div>
+            <div class="ba-label after-tag">Dopo · staged</div>
+            <div class="ba-corner" id="ba-after-corner">staged.jpg</div>
+          </div>
+        </div>
+
+        <!-- METRICHE: valore + tempo vendita -->
+        <div class="metrics-grid">
+          <!-- Card 1: Valore al m² -->
+          <div class="metric-card">
+            <div class="metric-icon">
+              <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+                <path d="M2 12l4-4 3 3 5-6M14 5h-3M14 5v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="metric-label">Valore preservato in trattativa</div>
+            <div class="metric-value">+<span id="uplift-min">4</span>–<span id="uplift-max">9</span><em>%</em></div>
+            <div class="metric-sub">
+              Da <span id="uplift-from">€ —/m²</span> a <span id="uplift-to">€ —/m²</span>
+              · <span id="uplift-city">—</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Tempo medio di vendita -->
+          <div class="metric-card">
+            <div class="metric-icon">
+              <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M8 4v4l2.5 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="metric-label">Tempo medio di vendita</div>
+            <div class="metric-value">da <span id="tts-before">171</span> a <em><span id="tts-after">40</span> gg</em></div>
+            <div class="metric-sub">
+              <span id="tts-saved">−131</span> giorni rispetto alla media <span id="tts-scope">nazionale</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- INVESTIMENTO -->
+        <div class="invest-row" id="invest-row">
+          <span>
+            Investimento stimato per gli interventi proposti:
+            <b id="invest-amount">€ —</b>
+          </span>
+          <span style="color:var(--ink-dim);">·</span>
+          <span>
+            Recupero atteso in trattativa:
+            <span class="gold" id="invest-return">€ —</span>
+          </span>
+        </div>
+
+        <!-- INTERVENTI dinamici -->
+        <div class="interventions">
+          <h4 id="interv-title">Interventi prioritari</h4>
+          <div class="sub" id="interv-sub">Stima di costo basata su mercato locale e fornitori medi della zona.</div>
+          <div class="interv-grid" id="interv-grid">
+            <div class="interv-empty">Caricamento interventi…</div>
+          </div>
+        </div>
+
+        <!-- DISCLAIMER -->
+        <div class="disclaimer">
+          <b>Nota metodologica.</b> Prezzi al m² basati su Idealista (Q3 2025) e Osservatorio del Mercato Immobiliare — Agenzia delle Entrate (OMI). I valori reali variano in modo significativo per quartiere, piano, esposizione e stato di conservazione (anche ±30% rispetto alla media comunale). Le stime di home staging derivano dal Report EAHSP 2025 (European Association of Home Staging Professionals) e dall'analisi FIAIP 2024 su 3.200 transazioni nelle principali province italiane. Le tariffe degli interventi sono stime medie per la città selezionata e non costituiscono preventivo. La simulazione è indicativa e non sostituisce una valutazione professionale.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── REGISTER (mostrato dopo risultato) ──────────── -->
+<section class="register-section hidden" id="register-section">
+  <div class="wrap">
+    <!-- Form variant -->
+    <div class="register-card" id="register-card-form">
+      <div>
+        <div class="register-eyebrow">10 crediti gratis</div>
+        <h2>Vuoi analizzare <em>tutto l'appartamento?</em></h2>
+        <p>
+          Salva questa analisi e aggiungi le altre stanze. Ricevi un link via email per
+          accedere — nessuna password da ricordare. Avrai 10 crediti gratis per analizzare
+          fino a 10 stanze, esportare il report e condividerlo con il proprietario.
+        </p>
+      </div>
+      <form class="register-form" id="register-form" autocomplete="off">
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="reg-email" class="input" placeholder="marco@studio.it" required autocomplete="email" />
+        </div>
+        <button type="submit" class="btn-primary" id="reg-submit-btn">
+          Salva e ricevi il link
+          <span class="arrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </button>
+        <div class="reg-err" id="reg-err">
+          <b id="reg-err-title">Attenzione.</b>
+          <span id="reg-err-text">—</span>
+          <div id="reg-err-hint" style="margin-top:8px;font-size:12px;color:var(--ink-mute);line-height:1.55;"></div>
+        </div>
+        <div class="register-perks">
+          <span>
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Nessuna password
+          </span>
+          <span>
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Nessuna carta richiesta
+          </span>
+          <span>
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            GDPR compliant
+          </span>
+        </div>
+      </form>
+    </div>
+
+    <!-- Post-email variant (shown after sending magic link) -->
+    <div class="post-email-card" id="register-card-sent" style="display:none;">
+      <div class="post-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+          <path d="M3 8l9 6 9-6M3 8v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8M3 8l2-3h14l2 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h3>Controlla la tua casella email</h3>
+      <p>Abbiamo inviato un link di accesso a <span class="email-shown" id="sent-email">—</span>.</p>
+      <p>Apri l'email e clicca sul link per accedere al tuo progetto già salvato e analizzare il resto dell'appartamento.</p>
+      <p style="font-size:12px;color:var(--ink-dim);margin-top:10px;">Il link è valido per 1 ora. Se non lo trovi, controlla anche la cartella Spam o Promozioni.</p>
+      <a class="resend-link" id="resend-link">Non l'hai ricevuto? Invia di nuovo</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── USE CASES ───────────────────────────────────── -->
+<section class="usecases-section" id="usecases">
+  <div class="wrap">
+    <h2 class="section-title">Pensato per chi <em>vende</em> e <em>affitta</em>.</h2>
+    <p class="section-sub">
+      Tre flussi di lavoro distinti, una sola piattaforma. Stessi risultati, lessico diverso.
+    </p>
+    <div class="usecase-grid">
+      <div class="usecase">
+        <div class="usecase-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M3 17V8l7-5 7 5v9M8 17v-5h4v5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Agenti immobiliari</h3>
+        <p>
+          Mostra al proprietario il potenziale dell'immobile prima ancora di firmare l'incarico.
+          Valorizza l'annuncio con foto staged senza spostare un mobile.
+        </p>
+        <ul>
+          <li>Report PDF brandizzato per il proprietario</li>
+          <li>Confronto Prima/Dopo per il listino</li>
+          <li>Stima uplift basata su comparabili OMI</li>
+        </ul>
+      </div>
+      <div class="usecase">
+        <div class="usecase-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="3" y="3" width="14" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M3 8h14M8 3v14" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <h3>Property manager</h3>
+        <p>
+          Ottimizza il rendimento di portafogli short-term. Identifica gli interventi a basso
+          costo che fanno crescere ADR e occupazione su Airbnb e Booking.
+        </p>
+        <ul>
+          <li>Stima impatto su ADR per stagione</li>
+          <li>Bulk processing su più appartamenti</li>
+          <li>Confronto stili per target demografico</li>
+        </ul>
+      </div>
+      <div class="usecase">
+        <div class="usecase-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2v3M10 15v3M2 10h3M15 10h3M4.2 4.2l2.1 2.1M13.7 13.7l2.1 2.1M4.2 15.8l2.1-2.1M13.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <h3>Home stager</h3>
+        <p>
+          Presenta moodboard e preventivi al cliente in pochi minuti, non in giorni.
+          Sperimenta tre stili sullo stesso ambiente prima di muovere il primo arredo.
+        </p>
+        <ul>
+          <li>3 varianti stilistiche per stanza</li>
+          <li>Lista shopping con fornitori italiani</li>
+          <li>Preventivo cliente personalizzabile</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── REVIEWS ─────────────────────────────────────── -->
+<section class="reviews-section" id="reviews">
+  <div class="wrap">
+    <h2 class="section-title">Cosa dicono <em>i primi 200</em> utenti.</h2>
+    <p class="section-sub">Beta privata · marzo–maggio 2026</p>
+
+    <div class="review-grid">
+      <div class="review">
+        <div class="review-stars">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l2 4.5 5 .5-3.7 3.4 1.1 4.9L8 12l-4.4 2.8 1.1-4.9L1 6.5l5-.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l2 4.5 5 .5-3.7 3.4 1.1 4.9L8 12l-4.4 2.8 1.1-4.9L1 6.5l5-.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l2 4.5 5 .5-3.7 3.4 1.1 4.9L8 12l-4.4 2.8 1.1-4.9L1 6.5l5-.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l2 4.5 5 .5-3.7 3.4 1.1 4.9L8 12l-4.4 2.8 1.1-4.9L1 6.5l5-.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l2 4.5 5 .5-3.7 3.4 1.1 4.9L8 12l-4.4 2.8 1.1-4.9L1 6.5l5-.5z"/></svg>
+        </div>
+        <p class="review-quote">
+          "L'ho usato per un bilocale a Porta Romana che avevo in mano da quattro mesi. Mostrato il PDF al proprietario lunedì, sistemato il listino mercoledì, venduto in tre settimane."
+        </p>
+        <div class="review-author">
+          <div class="avatar gold">CV</div>
+          <div>
+            <b>Claudia Verdi</b>
+            <span>Agente immobiliare · Milano</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="review">
+        <div class="review-stars">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l2 4.5 5 .5-3.7 3.4 1.1 4.9L8 12l-4.4 2.8 1.1-4.9L1 6.5l5-.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l2 4.5 5 .5-3.7 3.4 1.1 4.9L8 12l-4.4 2.8 1.1-4.9L1 6.5l5-.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l2 4.5 5 .5-3.7 3.4 1.1 4.9L8 12l-4.4 2.8 1.1-4.9L1 6.5l5-.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l2 4.5 5 .5-3.7 3.4 1.1 4.9L8 12l-4.4 2.8 1.1-4.9L1 6.5l5-.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l2 4.5 5 .5-3.7 3.4 1.1 4.9L8 12l-4.4 2.8 1.1-4.9L1 6.5l5-.5z"/></svg>
+        </div>
+        <p class="review-quote">
+          "Gestisco 23 appartamenti tra Roma e Firenze. Prima di ogni rifoto faccio passare lo scatto da staged. Il costo dei consigli è realistico — non è roba da Pinterest."
+        </p>
+        <div class="review-author">
+          <div class="avatar">MR</div>
+          <div>
+            <b>Matteo Rinaldi</b>
+            <span>Property manager · Roma</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="review">
+        <div class="review-stars">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l2 4.5 5 .5-3.7 3.4 1.1 4.9L8 12l-4.4 2.8 1.1-4.9L1 6.5l5-.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l2 4.5 5 .5-3.7 3.4 1.1 4.9L8 12l-4.4 2.8 1.1-4.9L1 6.5l5-.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l2 4.5 5 .5-3.7 3.4 1.1 4.9L8 12l-4.4 2.8 1.1-4.9L1 6.5l5-.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l2 4.5 5 .5-3.7 3.4 1.1 4.9L8 12l-4.4 2.8 1.1-4.9L1 6.5l5-.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l2 4.5 5 .5-3.7 3.4 1.1 4.9L8 12l-4.4 2.8 1.1-4.9L1 6.5l5-.5z"/></svg>
+        </div>
+        <p class="review-quote">
+          "Lo uso come ufficio progetti parallelo. Carico la foto, vedo tre stili, scelgo quello che parla al cliente, e poi disegno io il dettaglio. Mi ha dimezzato la fase di concept."
+        </p>
+        <div class="review-author">
+          <div class="avatar">SD</div>
+          <div>
+            <b>Sara De Luca</b>
+            <span>Home stager · Bologna</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ──────────────────────────────────────── -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="#" class="brand">
+          <span class="brand-mark"></span>
+          staged<em>.ai</em>
+        </a>
+        <p>Home staging AI per il mercato immobiliare italiano. Costi reali, città italiane, lessico nostro.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Prodotto</h5>
+          <a href="#studio">Demo</a>
+          <a href="#">Prezzi</a>
+          <a href="#">API</a>
+          <a href="#">Changelog</a>
+        </div>
+        <div class="foot-col">
+          <h5>Per chi</h5>
+          <a href="#">Agenti immobiliari</a>
+          <a href="#">Property manager</a>
+          <a href="#">Home stager</a>
+        </div>
+        <div class="foot-col">
+          <h5>Azienda</h5>
+          <a href="#">Chi siamo</a>
+          <a href="#">Contatti</a>
+          <a href="#">Privacy</a>
+          <a href="#">Termini</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 staged.ai — fatto in Italia</span>
+      <span>P.IVA · 3652876120 · hello@gestione-affitti-brevi-milano.it</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ─── JS ──────────────────────────────────────────── -->
+<script>
+(() => {
+  // ════════════════════════════════════════════════════════════════════════
+  // CONFIG — backend, secrets, return URL
+  // ════════════════════════════════════════════════════════════════════════
+  const BACKEND_URL = "https://homestager-backend-833352316081.europe-west1.run.app";
+  const STAGED_SECRET = "hs_beta_2025_v1";
+  // URL del configuratore (return URL del magic link).
+  // Dinamico: se la landing è servita da localhost o 127.0.0.1, APP_URL punta alla
+  // ROOT dello stesso server (dove deve vivere index.html, ovvero il configuratore aggiornato).
+  // In produzione, punta esplicitamente alla cartella prod.
+  // Quando aprirai la landing in produzione, anche APP_URL sarà la stessa root.
+  const APP_URL = (() => {
+    const host = location.hostname;
+    // Production canonical
+    if (host === "gestione-affitti-brevi-milano.it" || host === "www.gestione-affitti-brevi-milano.it") {
+      return "http://gestione-affitti-brevi-milano.it/homestaged-AI/";
+    }
+    // Local testing — same origin, same folder as landing.html
+    // The configurator (index.html) must be served from the same dir.
+    const folder = location.pathname.replace(/[^/]*$/, "");  // strip filename, keep trailing slash
+    return location.origin + folder;
+  })();
+
+  // ════════════════════════════════════════════════════════════════════════
+  // CITIES (autocomplete) — invariato dalla v1
+  // ════════════════════════════════════════════════════════════════════════
+  const CITIES = [
+    ["Roma","Lazio"],["Milano","Lombardia"],["Napoli","Campania"],["Torino","Piemonte"],
+    ["Palermo","Sicilia"],["Genova","Liguria"],["Bologna","Emilia-Romagna"],["Firenze","Toscana"],
+    ["Bari","Puglia"],["Catania","Sicilia"],["Venezia","Veneto"],["Verona","Veneto"],
+    ["Messina","Sicilia"],["Padova","Veneto"],["Trieste","Friuli-Venezia Giulia"],["Brescia","Lombardia"],
+    ["Taranto","Puglia"],["Prato","Toscana"],["Parma","Emilia-Romagna"],["Reggio Calabria","Calabria"],
+    ["Modena","Emilia-Romagna"],["Reggio Emilia","Emilia-Romagna"],["Perugia","Umbria"],["Livorno","Toscana"],
+    ["Ravenna","Emilia-Romagna"],["Cagliari","Sardegna"],["Foggia","Puglia"],["Rimini","Emilia-Romagna"],
+    ["Salerno","Campania"],["Ferrara","Emilia-Romagna"],["Sassari","Sardegna"],["Siracusa","Sicilia"],
+    ["Pescara","Abruzzo"],["Bergamo","Lombardia"],["Latina","Lazio"],["Monza","Lombardia"],
+    ["Vicenza","Veneto"],["Terni","Umbria"],["Forlì","Emilia-Romagna"],["Trento","Trentino-Alto Adige"],
+    ["Novara","Piemonte"],["Piacenza","Emilia-Romagna"],["Ancona","Marche"],["Lecce","Puglia"],
+    ["Bolzano","Trentino-Alto Adige"],["Catanzaro","Calabria"],["La Spezia","Liguria"],["Udine","Friuli-Venezia Giulia"],
+    ["Cesena","Emilia-Romagna"],["Arezzo","Toscana"],["Pesaro","Marche"],["Pisa","Toscana"],
+    ["Lucca","Toscana"],["Treviso","Veneto"],["Como","Lombardia"],["Varese","Lombardia"],
+    ["Pavia","Lombardia"],["Cremona","Lombardia"],["Mantova","Lombardia"],["Brindisi","Puglia"],
+    ["Andria","Puglia"],["Barletta","Puglia"],["Trani","Puglia"],["Pordenone","Friuli-Venezia Giulia"],
+    ["Asti","Piemonte"],["Cuneo","Piemonte"],["Alessandria","Piemonte"],["Aosta","Valle d'Aosta"],
+    ["Potenza","Basilicata"],["Matera","Basilicata"],["Campobasso","Molise"],["L'Aquila","Abruzzo"],
+    ["Frosinone","Lazio"],["Viterbo","Lazio"],["Caserta","Campania"],["Benevento","Campania"]
+  ];
+
+  // ════════════════════════════════════════════════════════════════════════
+  // PRICE_BASES — €/m² medi residenziali "usato"
+  // Fonti: Idealista Q3 2025 (media nazionale €1.834), OMI Agenzia Entrate I sem. 2025,
+  // BusinessOnline gen 2026, Wall Street Italia ago 2025.
+  // Per città non in tabella si usa NATIONAL_AVG.
+  // ════════════════════════════════════════════════════════════════════════
+  const NATIONAL_AVG = 1834;
+  const PRICE_BASES = {
+    // Nord — top fascia
+    "Milano":          5150, "Venezia":  4720, "Bolzano":     4690, "Firenze":   4520,
+    "Bologna":         3580, "Trento":   3280, "Como":        2780,
+    // Nord — fascia media
+    "Bergamo":         2480, "Brescia":  2280, "Parma":       2380, "Verona":    2350,
+    "Padova":          2150, "Modena":   2150, "Torino":      2080, "Reggio Emilia": 1850,
+    "Pavia":           1920, "Vicenza":  1820, "Genova":      1820, "Ravenna":   1820,
+    "Cremona":         1680, "Treviso":  1980, "Mantova":     1620, "Trieste":   1980,
+    "Varese":          2150, "Monza":    2480, "Piacenza":    1620, "Asti":      1480,
+    "Novara":          1580, "Pordenone": 1520, "Udine":      1380, "Cuneo":     1620,
+    "Alessandria":     1320, "Aosta":    1820, "Ferrara":     1280, "Forlì":     1420,
+    "Cesena":          1620, "Rimini":   2980,
+    // Centro
+    "Roma":            3240, "Pisa":     2580, "Lucca":       2480, "Arezzo":    1780,
+    "Livorno":         1850, "Prato":    1980, "Perugia":     1450, "Ancona":    1620,
+    "Pesaro":          1720, "Terni":    1180, "Latina":      1450, "Frosinone": 1180,
+    "Viterbo":         1280, "L'Aquila": 1280, "Pescara":     1620,
+    // Sud
+    "Napoli":          2860, "Salerno":  2480, "Caserta":     1820, "Benevento": 1280,
+    "Bari":            1750, "Lecce":    1480, "Taranto":     1080, "Brindisi":  1180,
+    "Foggia":           980, "Andria":   1020, "Barletta":    1080, "Trani":     1120,
+    "Potenza":         1180, "Matera":   1480, "Campobasso":  1080, "Reggio Calabria":  920,
+    "Catanzaro":       1080, "La Spezia": 1980,
+    // Isole
+    "Palermo":         1380, "Catania":  1380, "Messina":     1280, "Siracusa":  1320,
+    "Cagliari":        2150, "Sassari":  1480
+  };
+
+  // ════════════════════════════════════════════════════════════════════════
+  // STAGE_IMPACT — range conservativi di uplift sul valore percepito post-staging
+  // Combinazione di:
+  //   • uplift diretto sul prezzo finale: +1-3% (fonte: Beehome, OMI)
+  //   • valore preservato in trattativa: passaggio da sconto medio ~8-10% (Banca d'Italia)
+  //     a ~3% post-staging (FIAIP 2024, EAHSP 2025) = +5-7 punti percentuali preservati
+  // Effetto netto sul valore ottenuto: range conservativo +4-9%.
+  // Variazione per stile sulla base della "premiumness" percepita.
+  // ════════════════════════════════════════════════════════════════════════
+  const STAGE_IMPACT = {
+    "Japandi":    { min: 5, max: 8 },
+    "Scandinavo": { min: 4, max: 7 },
+    "Moderno":    { min: 6, max: 9 },
+    "Classico":   { min: 3, max: 6 },
+    "Minimal":    { min: 4, max: 7 },
+    "Boho":       { min: 3, max: 6 },
+    _default:     { min: 4, max: 7 }
+  };
+
+  // ════════════════════════════════════════════════════════════════════════
+  // TIME_TO_SELL — tempo medio di vendita in giorni
+  // Fonti:
+  //   • EAHSP 2025: 171gg nazionale (senza staging) → 40gg (con staging) area metropolitana
+  //   • FIAIP 2024 (3.200 transazioni): da 147gg a 97gg, -34%
+  //   • Sole 24 Ore mar 2025: Milano 160gg, Roma 140gg, Napoli 190gg, media 8 città 155gg
+  // Numeri "with staging" mantenuti conservativi (range medio EAHSP-FIAIP).
+  // ════════════════════════════════════════════════════════════════════════
+  const TIME_TO_SELL_NATIONAL = { before: 171, after: 50 };
+  const TIME_TO_SELL_CITY = {
+    "Milano":  { before: 160, after: 55 },
+    "Roma":    { before: 140, after: 45 },
+    "Napoli":  { before: 190, after: 60 },
+    "Torino":  { before: 155, after: 55 },
+    "Firenze": { before: 150, after: 50 },
+    "Bologna": { before: 145, after: 50 },
+    "Genova":  { before: 165, after: 55 },
+    "Palermo": { before: 175, after: 60 }
+  };
+
+  // ════════════════════════════════════════════════════════════════════════
+  // PRESET FALLBACK — Unsplash hero images per stile, usate SOLO se Gemini fallisce
+  // ════════════════════════════════════════════════════════════════════════
+  const STYLE_PRESETS = {
+    "Japandi":     "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80&auto=format&fit=crop",
+    "Scandinavo":  "https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?w=1200&q=80&auto=format&fit=crop",
+    "Moderno":     "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1200&q=80&auto=format&fit=crop",
+    "Classico":    "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&q=80&auto=format&fit=crop",
+    "Minimal":     "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80&auto=format&fit=crop",
+    "Boho":        "https://images.unsplash.com/photo-1615873968403-89e068629265?w=1200&q=80&auto=format&fit=crop"
+  };
+
+  // ════════════════════════════════════════════════════════════════════════
+  // LOADING MESSAGES — mostrati durante la pipeline reale
+  // ════════════════════════════════════════════════════════════════════════
+  const LOADING_MESSAGES = [
+    "Analizzo la stanza con Gemini…",
+    "Identifico arredi e potenziale…",
+    "Calcolo interventi e costi locali…",
+    "Genero la foto staged finale…"
+  ];
+
+  // ════════════════════════════════════════════════════════════════════════
+  // PROMPTS — replica fedele del configuratore di produzione (DEFAULT_SYS, DEFAULT_USER, FINALITA)
+  // ════════════════════════════════════════════════════════════════════════
+  const DEFAULT_SYS = `Sei un Interior Designer senior italiano specializzato in home staging per affitti brevi e case vacanza.
+Hai occhio critico: valuti ogni stanza, elimini il superfluo, sostituisci con arredi di design accessibili (IKEA, H&M Home, Zara Home, Maisons du Monde).
+Conosci i prezzi reali delle principali città italiane.
+Applichi sempre e solo lo stile scelto in modo coerente tra tutte le stanze.
+Rispondi ESCLUSIVAMENTE con un oggetto JSON valido. Nessun testo prima o dopo. Nessun markdown. Nessun backtick.
+Per i bagni: vasca e doccia sono elementi strutturali da MANTENERE o MIGLIORARE, mai eliminare. Se la vasca è datata o mal posizionata, proponi sostituzione con modello moderno (vasca freestanding o box doccia walk-in), includendo opere murarie (€300-800), idraulico (€500-1500), posa (€400-1200). Non rimuovere mai vasca o doccia senza sostituirla con un elemento equivalente o superiore visibile nella foto staged.
+Per le camere da letto: il letto deve essere SEMPRE vestito con biancheria di qualità fotografica — piumone bianco soffice gonfio, federe bianche stirate, almeno 4-6 cuscini stratificati (2 bianchi + 2-4 decorativi in lino/velluto/cotone), throw/plaid testurizzato drappeggiato naturalmente ai piedi o sul lato. Mai mostrare un letto spoglio, con materasso nudo o con copriletto piatto e anonimo. Standard: hotel boutique 4 stelle.
+PER I MONOLOCALI: se la stanza contiene una cucina/angolo cottura visibile, NON inserire un letto matrimoniale al centro — il letto va in zona notte separata o usa un divano letto. Il living area con cucina visibile richiede divano, tavolo, sedie — mai un letto in primo piano davanti ai fornelli.
+REGOLA GEOMETRIA: porte, finestre, travi, colonne, scale, aperture murarie sono elementi strutturali INVARIABILI. Non devono mai essere rimossi, spostati o ostruiti nel prompt_staged. INCLUDI esplicitamente: porte a scomparsa, porte scorrevoli, porte pieghevoli — specificare nel prompt_staged "Keep the sliding/pocket door in exact position and fully unobstructed." Se un mobile viene proposto vicino a una porta, deve lasciare almeno 90cm di spazio libero.
+REGOLA ASSOLUTA — ELETTRODOMESTICI, SANITARI E BUILT-IN: frigorifero, piano cottura, forno, lavastoviglie, lavatrice, vasca, doccia, wc, bidet, lavabo, lavello, cappa, termosifoni, infissi fissi vanno SEMPRE mantenuti nella posizione esatta. Non spostarli, non rimuoverli, non sostituirli SALVO esplicita richiesta dell'utente. Puoi aggiornarne lo stile visivo (colore, finitura) ma la posizione e la presenza sono invariabili.
+PER I PUNTI LUCE: ogni volta che proponi nuovi punti luce, applique, faretti o lampadari a soffitto che richiedono nuova alimentazione elettrica, DEVI aggiungere un intervento separato "Opere elettriche" con costo €80-200 per punto luce (impianto + elettricista). Non proporre mai un punto luce senza il corrispondente intervento elettrico.
+COERENZA ANALISI-FOTO: se un intervento propone la rimozione di un mobile (es. "rimozione armadio a ponte"), il prompt_staged DEVE esplicitamente escluderlo: "Remove the wardrobe completely — it must NOT appear in the generated image." Se non puoi garantire la rimozione, NON proporla come intervento.`;
+
+  const DEFAULT_USER = `Analizza queste {n_foto} foto e produci una scheda di home staging per {destination}.
+
+PARAMETRI:
+- Budget totale: €{budget}
+- Stile: {style}
+- Città: {city}
+- Destinazione: {destination}
+
+REGOLE OBBLIGATORIE:
+- BUDGET TOTALE APPARTAMENTO: €{budget} per tutte le {n_foto} stanze.
+- Budget indicativo per stanza: €{budget} / {n_foto} stanze = €{budget_per_stanza} per stanza.
+- PRIMA di scrivere i costi, calcola: somma_attuale = somma di tutti i costo_totale_stanza. Se somma_attuale > €{budget}, riduci proporzionalmente TUTTI i costi.
+- REGOLA FERREA: SOMMA(costo_totale_stanza) <= €{budget}. Se hai {n_foto} stanze e budget €{budget}, ogni stanza NON può avere costi > €{budget}/{n_foto} in media.
+- Ogni intervento nel preventivo DEVE corrispondere a qualcosa di visibile nel prompt_staged. Se non è nel preventivo non metterlo nel render e viceversa.
+- Applica {style} in modo coerente in ogni stanza: stessa palette, stessa luce, stesso tono fotografico.
+- Per ogni elemento presente (mobili, pittura, pavimenti, sanitari, elettrodomestici, infissi) decidi: rimuovi / mantieni / sostituisci.
+- Rimuovi SEMPRE: sacchi spazzatura, cavi in vista, oggetti abbandonati, elementi disturbanti.
+- Se il budget lo consente: sostituisci mobili brutti o sovradimensionati con pezzi IKEA moderni.
+- Aggiungi obbligatoriamente: tessili (tappeti, cuscini, tende, copriletto), piante, lampade, quadri, vasi, complementi decorativi coerenti con {style}.
+- ELETTRODOMESTICI E BUILT-IN: frigorifero, piano cottura, forno, lavastoviglie, lavatrice, cappa — mantieni SEMPRE in posizione esatta a meno che l'utente non chieda esplicitamente di spostarli o sostituirli. Stessa regola per sanitari (vasca, doccia, wc, bidet, lavabo) e infissi fissi.
+- Il prompt_staged deve contenere esplicitamente: "Keep refrigerator, stove, built-in appliances, sanitary fixtures in exact position — do not remove or relocate unless explicitly requested."
+- Inquadratura: wide angle da angolo, luce naturale soft, bright and airy, 8k.
+
+BUDGET RULE — FONDAMENTALE: il budget €{budget} è il TOTALE per TUTTO l'appartamento ({n_foto} stanze).
+  - Distribuisci il budget tra le stanze proporzionalmente alla loro dimensione e priorità di intervento.
+  - Budget per stanza ≈ €{budget} / {n_foto} stanze. Non superare mai €{budget} come somma di tutti i costo_totale_stanza.
+  - Budget medio per stanza ≤ €1500: solo cosmetico (tessili, complementi, lampada, piante). NO mobili nuovi strutturali.
+  - Budget medio per stanza €1500-3000: puoi aggiungere 1-2 mobili chiave per stanza.
+  - Budget medio per stanza > €3000: trasformazione più ampia.
+  - Il prompt_staged deve essere COERENTE con il budget ALLOCATO a quella stanza.
+
+REGOLA PITTURA — CRITICA: La tinteggiatura professionale a Milano costa €150-400 minimo per stanza.
+  - Se budget per stanza < €300: NON includere tinteggiatura. Zero. Usa le pareti esistenti così come sono.
+  - Se budget per stanza €300-500: includi pittura SOLO se le pareti sono visibilmente danneggiate/scrostate/macchiate. Altrimenti NO.
+  - Se budget per stanza > €500: puoi includere tinteggiatura se migliora significativamente l'aspetto.
+  - Quando non includi pittura, il prompt_staged deve specificare: "Keep existing wall color unchanged."
+  - Non includere mai pittura solo per "stile" se il budget non lo permette realisticamente.
+
+Per ogni stanza includi nel campo "prompt_staged" un prompt in inglese (max 100 parole):
+  - Inizia con: "Interior design photo edit on a budget of €{budget}. Transform this room into {style} style."
+  - In base al budget, elenca SOLO gli interventi realizzabili (es. budget basso = add rug, change lamp, add plants and textiles, decorative cushions).
+  - Specifica colore pareti esatto.
+  - Tessili e complementi stile {style} in linea col budget.
+  - Chiudi con: "Keep exact room geometry. Professional real estate photo, soft natural light, wide angle corner shot, 8k."
+
+Restituisci SOLO questo JSON:
+{{
+  "valutazione_generale": "analisi dettagliata",
+  "punti_di_forza": ["p1"],
+  "criticita": ["c1 — elemento specifico"],
+  "potenziale_str": "potenziale affitto con {style}",
+  "tariffe": {{
+    "attuale_notte": "€XX-YY",
+    "post_restyling_notte": "€XX-YY",
+    "incremento_percentuale": "XX%"
+  }},
+  "stanze": [
+    {{
+      "nome": "Soggiorno",
+      "indice_foto": 0,
+      "stato_attuale": "descrizione con giudizio su ogni elemento",
+      "elementi_da_rimuovere": ["elemento — motivazione"],
+      "elementi_da_mantenere": ["elemento — motivazione"],
+      "interventi": [
+        {{
+          "titolo": "Sostituzione divano",
+          "dettaglio": "IKEA UPPLAND 3 posti lino naturale",
+          "costo_min": 400,
+          "costo_max": 600,
+          "priorita": "alta",
+          "dove_comprare": "IKEA"
+        }},
+        {{
+          "titolo": "Nuova lampada a soffitto",
+          "dettaglio": "IKEA RANARP 38cm",
+          "costo_min": 60,
+          "costo_max": 90,
+          "priorita": "media",
+          "dove_comprare": "IKEA"
+        }}
+      ],
+      "costo_totale_stanza": 750,
+      "prompt_staged": "Interior design photo edit. Transform this room into {style} style. Remove [...]. Walls: [...]. IKEA [...]. Textiles [...]. Keep exact room geometry. Professional real estate photo, soft natural light, wide angle corner shot, 8k."
+    }}
+  ],
+  "riepilogo_costi": {{
+    "manodopera_tinteggiatura": 200,
+    "materiali_pittura": 80,
+    "arredi_complementi": 400,
+    "montaggio_varie": 70,
+    "totale": 750,
+    "budget_residuo": 250,
+    "nota_budget": "commento"
+  }},
+  "piano_acquisti": [
+    {{
+      "categoria": "Arredi",
+      "articoli": ["IKEA SÖDERHAMN divano"],
+      "budget_stimato": 800,
+      "negozi_consigliati": "IKEA, Maisons du Monde"
+    }}
+  ],
+  "titolo_annuncio_suggerito": "Titolo Airbnb max 50 caratteri",
+  "highlights_str": ["h1", "h2", "h3"],
+  "roi_restyling": "ROI: €{budget} investiti, +€Y/notte, break-even Z notti"
+}}`;
+
+  const FINALITA_STAGING_EN = "TASK: Home Staging for short-term rental or sale — NO structural works. Replace/remove dated furniture, add hotel-quality textiles (rugs, cushions, curtains, layered bedding), plants, artwork, warm lighting, decorative accessories. Repaint walls ONLY if budget allows (min €150/room) AND walls are damaged. Budget-driven IKEA/equivalent furniture. NO demolition, NO new flooring, NO plumbing. Result: professional Airbnb hero shot.";
+
+  // ════════════════════════════════════════════════════════════════════════
+  // ANON ID — UUID lato client per rate-limit Firestore
+  // Su HTTP crypto.randomUUID() non è disponibile, uso fallback.
+  // ════════════════════════════════════════════════════════════════════════
+  function genAnonId(){
+    if (window.crypto && window.crypto.randomUUID) {
+      try { return "anon_" + window.crypto.randomUUID(); } catch(e){}
+    }
+    return "anon_" + Date.now() + "_" + Math.random().toString(36).slice(2, 11) + Math.random().toString(36).slice(2, 11);
+  }
+  function getAnonId(){
+    let id = localStorage.getItem("staged_anon_id");
+    if (!id) { id = genAnonId(); localStorage.setItem("staged_anon_id", id); }
+    return id;
+  }
+
+  // ════════════════════════════════════════════════════════════════════════
+  // FIREBASE — wait for module to be ready
+  // ════════════════════════════════════════════════════════════════════════
+  function whenFbReady() {
+    return new Promise(resolve => {
+      if (window._fbReady) { resolve(); return; }
+      document.addEventListener("fbready", () => resolve(), { once: true });
+      // safety timeout 5s
+      setTimeout(() => resolve(), 5000);
+    });
+  }
+
+  // ════════════════════════════════════════════════════════════════════════
+  // CLARITY tracking — no-op se Clarity non è caricato
+  // ════════════════════════════════════════════════════════════════════════
+  function track(event, params) {
+    try {
+      if (window.clarity) { window.clarity("event", event); }
+      if (window.dataLayer) { window.dataLayer.push({ event: event, ...(params || {}) }); }
+      console.log("[track]", event, params || {});
+    } catch(e) { /* silent */ }
+  }
+
+  // ════════════════════════════════════════════════════════════════════════
+  // BACKEND helpers — replica esatta di _authHeaders del configuratore
+  // ════════════════════════════════════════════════════════════════════════
+  function authHeaders() {
+    return {
+      "Content-Type": "application/json",
+      "X-Staged-Token": STAGED_SECRET,
+      "X-User-UID": getAnonId()      // backend non distingue anon — è solo un identifier
+    };
+  }
+
+  // ════════════════════════════════════════════════════════════════════════
+  // IMAGE → base64 + mime + dimensions
+  // ════════════════════════════════════════════════════════════════════════
+  function fileToB64(file) {
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => {
+        const result = r.result;
+        const comma = result.indexOf(",");
+        resolve({
+          b64: result.slice(comma + 1),
+          mime: file.type || "image/jpeg",
+          dataUrl: result
+        });
+      };
+      r.onerror = () => reject(new Error("FileReader error"));
+      r.readAsDataURL(file);
+    });
+  }
+
+  // Aggressive compression specifically for Firestore writes.
+  // Target: ~400 KB max per image, so two images stay well under the 1 MiB doc limit.
+  // We retry progressively lower quality until under target size, with a floor at 0.55.
+  async function compressForFirestore(b64, mime, targetKB) {
+    if (!b64) return null;
+    targetKB = targetKB || 400;
+    // Decode current size from base64
+    const sizeBytes = Math.floor(b64.length * 3 / 4);
+    if (sizeBytes <= targetKB * 1024) {
+      // Already small enough
+      return { b64: b64, mime: mime };
+    }
+    // Build a data URL and let canvas re-encode
+    const dataUrl = "data:" + (mime || "image/jpeg") + ";base64," + b64;
+    // First pass: max 1100px wide at q=0.78
+    let attempt = await compressImage(dataUrl, 1100, 0.78);
+    let attemptBytes = Math.floor(attempt.b64.length * 3 / 4);
+    // Retry tighter if needed
+    const passes = [
+      { w: 1024, q: 0.72 },
+      { w: 960,  q: 0.68 },
+      { w: 880,  q: 0.62 },
+      { w: 800,  q: 0.55 }
+    ];
+    for (const p of passes) {
+      if (attemptBytes <= targetKB * 1024) break;
+      attempt = await compressImage(dataUrl, p.w, p.q);
+      attemptBytes = Math.floor(attempt.b64.length * 3 / 4);
+    }
+    console.log("[compressForFirestore] reduced " + Math.round(sizeBytes/1024) + " KB → " + Math.round(attemptBytes/1024) + " KB");
+    return { b64: attempt.b64, mime: "image/jpeg" };
+  }
+
+  // Compress image to keep payload under ~1MB (mirror compressForUpload in app)
+  async function compressImage(dataUrl, maxWidth, quality) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxWidth / img.naturalWidth);
+        const canvas = document.createElement("canvas");
+        canvas.width  = Math.round(img.naturalWidth  * scale);
+        canvas.height = Math.round(img.naturalHeight * scale);
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const out = canvas.toDataURL("image/jpeg", quality);
+        const comma = out.indexOf(",");
+        resolve({ b64: out.slice(comma + 1), mime: "image/jpeg", dataUrl: out });
+      };
+      img.onerror = reject;
+      img.src = dataUrl;
+    });
+  }
+
+  // ════════════════════════════════════════════════════════════════════════
+  // RATE LIMIT — Firestore-backed anonymous generation counter
+  // Collection: anonGenerations/{anonId} { count, lastGenAt, userAgent }
+  // ════════════════════════════════════════════════════════════════════════
+  async function canGenerateAnonymously() {
+    await whenFbReady();
+    if (!window._fbDb) return true;   // fail-open: se Firestore non risponde, lasciamo provare
+    try {
+      const ref = window._fbDoc(window._fbDb, "anonGenerations", getAnonId());
+      const snap = await window._fbGetDoc(ref);
+      if (!snap.exists()) return true;
+      const data = snap.data() || {};
+      return (data.count || 0) < 1;
+    } catch (e) {
+      console.warn("[canGenerate] fail-open:", e.message);
+      return true;
+    }
+  }
+
+  async function recordGeneration(payload) {
+    await whenFbReady();
+    if (!window._fbDb) {
+      console.error("[recordGeneration] ABORT — Firestore not ready");
+      return false;
+    }
+    const anonId = getAnonId();
+
+    // Aggressive compression specifically for the Firestore doc.
+    // Note: this does NOT affect what the user sees in the landing — state.fileDataUrl
+    // and state.stagedB64 stay at their original quality. We only shrink for transport.
+    // The configurator will overwrite Storage with these compressed versions, which is
+    // fine: Storage has no 1 MiB limit but the configurator's own rendering uses the
+    // result Gemini gave us, which is already 1400px.
+    let origForDoc = null, stagedForDoc = null;
+    try {
+      origForDoc = await compressForFirestore(payload.origB64, payload.origMime, 380);
+      if (payload.stagedB64) {
+        stagedForDoc = await compressForFirestore(payload.stagedB64, payload.stagedMime, 380);
+      }
+    } catch (e) {
+      console.error("[recordGeneration] compression failed:", e);
+      // Fall back to original sizes — write may still fail, but we tried
+      origForDoc = { b64: payload.origB64, mime: payload.origMime };
+      stagedForDoc = payload.stagedB64 ? { b64: payload.stagedB64, mime: payload.stagedMime } : null;
+    }
+
+    const docData = {
+      count: 1,
+      lastGenAt: new Date().toISOString(),
+      userAgent: (navigator.userAgent || "").slice(0, 200),
+      prefs: payload.prefs || null,
+      analysis: payload.analysis || null,
+      stagedB64: stagedForDoc ? stagedForDoc.b64 : null,
+      stagedMime: stagedForDoc ? stagedForDoc.mime : null,
+      origB64: origForDoc ? origForDoc.b64 : null,
+      origMime: origForDoc ? origForDoc.mime : null,
+      origName: payload.origName || null
+    };
+    // Compute approximate size — Firestore hard-limits at 1 MiB per doc
+    const approxBytes =
+        (docData.analysis  ? JSON.stringify(docData.analysis).length : 0)
+      + (docData.stagedB64 ? docData.stagedB64.length : 0)
+      + (docData.origB64   ? docData.origB64.length   : 0);
+    console.log("%c[recordGeneration] writing", "color:#c9a86c;font-weight:bold;", {
+      anonId,
+      approxBytes,
+      approxKB: Math.round(approxBytes / 1024),
+      hasAnalysis: !!docData.analysis,
+      hasStaged: !!docData.stagedB64,
+      hasOrig: !!docData.origB64,
+      stagedLen: docData.stagedB64 ? docData.stagedB64.length : 0,
+      origLen: docData.origB64 ? docData.origB64.length : 0
+    });
+    if (approxBytes > 1024 * 1024) {
+      console.error(
+        "[recordGeneration] WARNING — doc is " + Math.round(approxBytes/1024) + " KB, exceeds Firestore 1 MiB limit. " +
+        "Write will fail."
+      );
+    }
+    try {
+      const ref = window._fbDoc(window._fbDb, "anonGenerations", anonId);
+      await window._fbSetDoc(ref, docData, { merge: true });
+      console.log("%c[recordGeneration] SUCCESS — saved to Firestore", "color:#7fa872;font-weight:bold;", anonId);
+      return true;
+    } catch (e) {
+      console.error("%c[recordGeneration] FAILED", "color:#c97a6c;font-weight:bold;");
+      console.error("  message:", e.message);
+      console.error("  code:", e.code);
+      console.error("  full error:", e);
+      console.error("  anonId was:", anonId);
+      console.error("  Firebase project (check it's staged-ai):", window._fbDb?.app?.options?.projectId);
+      if (e.code === "permission-denied") {
+        console.error(
+          "  → Firestore rules are blocking the write. Check that rules include:\n" +
+          "    match /anonGenerations/{anonId} {\n" +
+          "      allow read;\n" +
+          "      allow write;\n" +
+          "    }"
+        );
+      } else if ((e.message||"").includes("exceeds the maximum") || (e.message||"").includes("too large")) {
+        console.error(
+          "  → Doc too large. stagedB64 + origB64 = " +
+          Math.round(approxBytes/1024) + " KB. Need stronger compression."
+        );
+      }
+      return false;
+    }
+  }
+
+  // ════════════════════════════════════════════════════════════════════════
+  // GEMINI ANALYZE — replica esatta del payload di analyzePhotos() del configuratore
+  // ════════════════════════════════════════════════════════════════════════
+  function interp(tpl, vars) {
+    return tpl.replace(/\{(\w+)\}/g, (_, k) => vars[k] !== undefined ? vars[k] : "{" + k + "}");
+  }
+
+  async function analyzePhoto(imgB64, imgMime, prefs) {
+    const vars = {
+      style: prefs.style,
+      budget: prefs.budget,
+      n_foto: 1,
+      budget_per_stanza: prefs.budget,
+      destination: "affitto breve (Airbnb / Booking)",
+      city: prefs.city || "Italia"
+    };
+    const roomDetails = "[FOTO 0 — stanza] " + FINALITA_STAGING_EN;
+    const userPromptFinal = interp(DEFAULT_USER, vars)
+      + "\n\nCONFIGURAZIONE STANZE:\n" + roomDetails;
+    const payload = {
+      system_instruction: { parts: [{ text: DEFAULT_SYS }] },
+      contents: [{
+        role: "user",
+        parts: [
+          { inline_data: { mime_type: imgMime, data: imgB64 } },
+          { text: userPromptFinal }
+        ]
+      }],
+      generationConfig: { temperature: 0.2, maxOutputTokens: 65536, responseMimeType: "application/json" }
+    };
+    const res = await fetch(BACKEND_URL + "/gemini-analyze", {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify({ payload: payload, model: "gemini-2.5-flash" })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.detail || ("HTTP " + res.status));
+    }
+    const data = await res.json();
+    const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    const clean = raw.replace(/^```(?:json)?\s*/, "").replace(/\s*```\s*$/, "").trim();
+    return JSON.parse(clean);
+  }
+
+  // ════════════════════════════════════════════════════════════════════════
+  // GEMINI / IMAGEN IMAGE GENERATION — catena fallback come configuratore
+  // ════════════════════════════════════════════════════════════════════════
+  const GEMINI_IMG_MODELS = [
+    "gemini-3.1-flash-image-preview",
+    "gemini-2.5-flash-image",
+    "gemini-3-pro-image-preview"
+  ];
+
+  async function generateStaged(imgB64, imgMime, promptEn) {
+    const payload = {
+      contents: [{
+        parts: [
+          { inline_data: { mime_type: imgMime, data: imgB64 } },
+          { text: promptEn }
+        ]
+      }],
+      generationConfig: { responseModalities: ["TEXT", "IMAGE"] }
+    };
+    let lastErr = "";
+    // Primary: Gemini native
+    for (const model of GEMINI_IMG_MODELS) {
+      try {
+        console.log("[genImage] trying", model);
+        const r = await fetch(BACKEND_URL + "/stage-image", {
+          method: "POST",
+          headers: authHeaders(),
+          body: JSON.stringify({ model: model, payload: payload })
+        });
+        const data = await r.json();
+        if (data.error) { lastErr = model + ": " + data.error.message; continue; }
+        const parts = data?.candidates?.[0]?.content?.parts || [];
+        const imgPart = parts.find(p => {
+          const id = p.inline_data || p.inlineData;
+          return id && (id.mime_type || id.mimeType || "").startsWith("image/");
+        });
+        if (!imgPart) { lastErr = model + ": no image"; continue; }
+        const id = imgPart.inline_data || imgPart.inlineData;
+        return { b64: id.data, mime: id.mime_type || id.mimeType || "image/png" };
+      } catch(e) { lastErr = model + ": " + e.message; }
+    }
+    // Fallback: Imagen 3 via backend
+    console.log("[genImage] falling back to Imagen");
+    const res = await fetch(BACKEND_URL + "/stage-image", {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify({ photo_b64: imgB64, photo_mime: imgMime, prompt: promptEn })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error((data.detail || "Backend error") + " — chain err: " + lastErr);
+    if (!data.image_b64) throw new Error("No image returned from backend");
+    return { b64: data.image_b64, mime: "image/png" };
+  }
+
+  // ════════════════════════════════════════════════════════════════════════
+  // STATE
+  // ════════════════════════════════════════════════════════════════════════
+  const $ = id => document.getElementById(id);
+  const state = {
+    file: null,
+    fileB64: null,
+    fileMime: null,
+    fileDataUrl: null,
+    city: "",
+    style: "",
+    step: 1,
+    // Set after a successful generation
+    analysis: null,
+    stagedB64: null,
+    stagedMime: null,
+    usedFallback: false
+  };
+
+  // ════════════════════════════════════════════════════════════════════════
+  // DOM refs
+  // ════════════════════════════════════════════════════════════════════════
+  const uploadZone   = $("upload-zone");
+  const fileInput    = $("file-input");
+  const previewEl    = $("upload-preview");
+  const previewThumb = $("preview-thumb");
+  const previewName  = $("preview-name");
+  const previewSize  = $("preview-size");
+  const cityInput    = $("city-input");
+  const cityAuto     = $("city-autocomplete");
+  const styleInput   = $("style-input");
+  const chips        = document.querySelectorAll(".chip");
+  const generateBtn  = $("generate-btn");
+  const loadingStage = $("loading-stage");
+  const loadingMsg   = $("loading-msg");
+  const loadingBar   = $("loading-bar");
+  const loadingStages= $("loading-stages");
+  const resultStage  = $("result-stage");
+  const studioBody   = $("studio-body");
+  const stepNum      = $("step-num");
+  const stepLabel    = $("step-label");
+  const registerSection = $("register-section");
+  const trialStatus  = $("trial-status");
+  const errBanner    = $("err-banner");
+  const errText      = $("err-text");
+
+  // ════════════════════════════════════════════════════════════════════════
+  // UPLOAD
+  // ════════════════════════════════════════════════════════════════════════
+  uploadZone.addEventListener("click", () => fileInput.click());
+  uploadZone.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileInput.click(); }
+  });
+  uploadZone.addEventListener("dragover", e => {
+    e.preventDefault(); uploadZone.classList.add("drag-over");
+  });
+  uploadZone.addEventListener("dragleave", () => uploadZone.classList.remove("drag-over"));
+  uploadZone.addEventListener("drop", e => {
+    e.preventDefault(); uploadZone.classList.remove("drag-over");
+    const f = e.dataTransfer.files[0];
+    if (f && f.type.startsWith("image/")) handleFile(f);
+  });
+  fileInput.addEventListener("change", e => {
+    if (e.target.files[0]) handleFile(e.target.files[0]);
+  });
+  $("change-btn").addEventListener("click", () => fileInput.click());
+
+  async function handleFile(file) {
+    if (!file.type.startsWith("image/")) { showError("Formato non valido. Usa JPG o PNG."); return; }
+    if (file.size > 12 * 1024 * 1024)    { showError("File troppo grande. Max 12 MB."); return; }
+    hideError();
+    state.file = file;
+    track("landing_upload", { size_kb: Math.round(file.size / 1024) });
+
+    const url = URL.createObjectURL(file);
+    previewThumb.style.backgroundImage = `url(${url})`;
+    previewName.textContent = file.name;
+    const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+    const probe = new Image();
+    probe.onload = () => {
+      previewSize.textContent = `${sizeMB} MB · ${probe.naturalWidth} × ${probe.naturalHeight}`;
+    };
+    probe.src = url;
+    previewSize.textContent = `${sizeMB} MB`;
+
+    // Convert to b64 and compress in background (so we don't block click→generate)
+    try {
+      const raw = await fileToB64(file);
+      const small = await compressImage(raw.dataUrl, 1400, 0.92);
+      state.fileB64 = small.b64;
+      state.fileMime = small.mime;
+      state.fileDataUrl = small.dataUrl;
+    } catch (e) {
+      console.warn("compress failed, using raw:", e);
+      const raw = await fileToB64(file);
+      state.fileB64 = raw.b64;
+      state.fileMime = raw.mime;
+      state.fileDataUrl = raw.dataUrl;
+    }
+
+    uploadZone.classList.add("hidden");
+    previewEl.classList.add("show");
+    advanceStep();
+    updateGenerateButton();
+  }
+
+  // ════════════════════════════════════════════════════════════════════════
+  // CITY autocomplete
+  // ════════════════════════════════════════════════════════════════════════
+  cityInput.addEventListener("input", () => {
+    const q = cityInput.value.trim().toLowerCase();
+    state.city = cityInput.value.trim();
+    if (q.length < 1) { cityAuto.classList.remove("show"); updateGenerateButton(); return; }
+    const matches = CITIES.filter(([n]) => n.toLowerCase().startsWith(q)).slice(0, 8);
+    if (matches.length === 0) { cityAuto.classList.remove("show"); return; }
+    cityAuto.innerHTML = matches.map(([n, r]) =>
+      `<div class="item" data-city="${n}"><span>${n}</span><span class="region">${r}</span></div>`
+    ).join("");
+    cityAuto.classList.add("show");
+    updateGenerateButton();
+  });
+  cityAuto.addEventListener("click", e => {
+    const item = e.target.closest(".item");
+    if (!item) return;
+    cityInput.value = item.dataset.city;
+    state.city = item.dataset.city;
+    cityAuto.classList.remove("show");
+    updateGenerateButton();
+  });
+  document.addEventListener("click", e => {
+    if (!e.target.closest(".input-wrap")) cityAuto.classList.remove("show");
+  });
+
+  // ════════════════════════════════════════════════════════════════════════
+  // STYLE chips + free-text
+  // ════════════════════════════════════════════════════════════════════════
+  chips.forEach(chip => {
+    chip.addEventListener("click", () => {
+      chips.forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+      styleInput.value = chip.dataset.style;
+      state.style = chip.dataset.style;
+      updateGenerateButton();
+    });
+  });
+  styleInput.addEventListener("input", () => {
+    state.style = styleInput.value.trim();
+    chips.forEach(c => {
+      c.classList.toggle("active", c.dataset.style.toLowerCase() === state.style.toLowerCase());
+    });
+    updateGenerateButton();
+  });
+
+  // ════════════════════════════════════════════════════════════════════════
+  // STEP indicator + Generate button enable/disable
+  // ════════════════════════════════════════════════════════════════════════
+  function advanceStep() {
+    if (state.file && state.step < 2) {
+      state.step = 2;
+      stepNum.textContent = "2";
+      stepLabel.textContent = "Imposta i parametri";
+    }
+  }
+  function updateGenerateButton() {
+    const ready = state.fileB64 && state.city && state.style;
+    generateBtn.disabled = !ready;
+    if (ready && state.step < 3) {
+      state.step = 3;
+      stepNum.textContent = "3";
+      stepLabel.textContent = "Pronto a generare";
+    }
+  }
+
+  // ════════════════════════════════════════════════════════════════════════
+  // ERROR helpers
+  // ════════════════════════════════════════════════════════════════════════
+  function showError(msg) {
+    errText.textContent = msg;
+    errBanner.style.display = "block";
+  }
+  function hideError() { errBanner.style.display = "none"; }
+
+  // ════════════════════════════════════════════════════════════════════════
+  // GENERATE — main pipeline (real Gemini analyze + image gen, with fallback)
+  // ════════════════════════════════════════════════════════════════════════
+  generateBtn.addEventListener("click", async () => {
+    // Quota check
+    const ok = await canGenerateAnonymously();
+    if (!ok) {
+      showError("Hai già usato la prova gratuita. Registrati qui sotto per ricevere 10 crediti gratis e continuare.");
+      // scroll to register
+      registerSection.classList.remove("hidden");
+      registerSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      track("landing_quota_exceeded");
+      return;
+    }
+
+    hideError();
+    track("landing_generate_start", { city: state.city, style: state.style });
+
+    studioBody.classList.add("hidden");
+    resultStage.classList.remove("show");
+    loadingStage.classList.add("show");
+    stepNum.textContent = "·";
+    stepLabel.textContent = "Generazione in corso…";
+
+    // Cycle loading messages
+    let mi = 0;
+    loadingMsg.textContent = LOADING_MESSAGES[0];
+    loadingBar.style.width = "10%";
+    loadingStages.textContent = `Step 1 di ${LOADING_MESSAGES.length}`;
+    const cycler = setInterval(() => {
+      mi = Math.min(mi + 1, LOADING_MESSAGES.length - 1);
+      loadingMsg.style.opacity = "0";
+      setTimeout(() => {
+        loadingMsg.textContent = LOADING_MESSAGES[mi];
+        loadingMsg.style.opacity = "1";
+        loadingBar.style.width = ((mi + 1) / LOADING_MESSAGES.length * 100) + "%";
+        loadingStages.textContent = `Step ${mi + 1} di ${LOADING_MESSAGES.length}`;
+      }, 200);
+    }, 1200);
+
+    const prefs = {
+      style: state.style,
+      city: state.city,
+      budget: 8000,
+      photoStyle: "Bright & Airy",
+      destinazione: "STR",
+      palette: []
+    };
+
+    let analysis = null, staged = null, usedFallback = false;
+    try {
+      // 1) Analyze
+      analysis = await analyzePhoto(state.fileB64, state.fileMime, prefs);
+      const firstRoom = (analysis.stanze || [])[0];
+      if (!firstRoom) throw new Error("Nessuna stanza riconosciuta nell'analisi.");
+
+      // 2) Generate staged image
+      const promptStaged = (firstRoom.prompt_staged || "").replace(/\{style\}/g, state.style);
+      if (!promptStaged) throw new Error("Prompt staged mancante nell'analisi.");
+      staged = await generateStaged(state.fileB64, state.fileMime, promptStaged);
+
+    } catch (err) {
+      console.error("[generate] failed — full error:", err);
+      console.error("[generate] stack:", err && err.stack);
+      console.error("[generate] backend was:", BACKEND_URL);
+      console.error("[generate] origin (check CORS whitelist):", location.origin);
+      console.error("[generate] anon-id sent as X-User-UID:", getAnonId());
+      track("landing_generate_fail", { reason: (err.message || "").slice(0, 100) });
+      usedFallback = true;
+      staged = null;
+
+      // Surface the real error to the user so we don't hide diagnostic info
+      let userMsg;
+      if (err.message && (err.message.includes("Failed to fetch") || err.message.includes("NetworkError"))) {
+        userMsg = "Errore di rete (probabile CORS). L'origin di questa pagina è "
+          + location.origin
+          + " — non è nella whitelist del backend. "
+          + "Soluzione: testa la pagina su http://localhost:5173 (già in whitelist) oppure "
+          + "aggiungi questo origin a ALLOWED_ORIGINS del Cloud Run backend. "
+          + "Dettagli completi in console (DevTools → Console).";
+      } else if (err.message && (err.message.includes("HTTP 401") || err.message.includes("HTTP 403"))) {
+        userMsg = "Backend ha rifiutato la richiesta (auth/credito). Dettaglio: "
+          + err.message
+          + ". Probabile che il backend richieda un UID Firebase valido — non basta uno anonimo. Vedi DevTools → Network per la response body.";
+      } else if (err.message && err.message.includes("HTTP 5")) {
+        userMsg = "Backend in errore: " + err.message + ". Riprova tra qualche minuto.";
+      } else {
+        userMsg = "Generazione fallita. Dettaglio tecnico: " + (err.message || String(err)) + ". Vedi DevTools → Console per lo stack completo.";
+      }
+      showError(userMsg);
+    }
+
+    clearInterval(cycler);
+    loadingBar.style.width = "100%";
+
+    // Wait a beat so loading completes visually
+    setTimeout(() => {
+      loadingStage.classList.remove("show");
+      renderResult(prefs, analysis, staged, usedFallback);
+    }, 500);
+  });
+
+  // ════════════════════════════════════════════════════════════════════════
+  // RENDER RESULT
+  // ════════════════════════════════════════════════════════════════════════
+  async function renderResult(prefs, analysis, staged, usedFallback) {
+    state.analysis = analysis;
+    state.usedFallback = usedFallback;
+    state.saved = false;   // becomes true after recordGeneration() resolves successfully
+
+    // BEFORE photo: always the uploaded file
+    $("ba-before").style.backgroundImage = `url(${state.fileDataUrl})`;
+    $("ba-before-corner").textContent = (state.file && state.file.name) ? state.file.name : "original.jpg";
+
+    // AFTER photo: real or fallback
+    let afterUrl;
+    if (staged && staged.b64) {
+      afterUrl = "data:" + staged.mime + ";base64," + staged.b64;
+      state.stagedB64 = staged.b64;
+      state.stagedMime = staged.mime;
+      $("preset-tag").style.display = "none";
+    } else {
+      // Unsplash preset
+      afterUrl = STYLE_PRESETS[prefs.style] || STYLE_PRESETS["Japandi"];
+      state.stagedB64 = null;
+      state.stagedMime = null;
+      $("preset-tag").style.display = "inline-block";
+    }
+    $("ba-after").style.backgroundImage = `url('${afterUrl}')`;
+    $("ba-after-corner").textContent = "staged_" + prefs.style.toLowerCase() + ".jpg";
+
+    // Style label
+    $("result-style").textContent = prefs.style;
+
+    // Uplift metric — range conservativo
+    const impact = STAGE_IMPACT[prefs.style] || STAGE_IMPACT._default;
+    const base = PRICE_BASES[prefs.city] || NATIONAL_AVG;
+    const afterMin = Math.round(base * (1 + impact.min / 100) / 10) * 10;
+    const afterMax = Math.round(base * (1 + impact.max / 100) / 10) * 10;
+    $("uplift-min").textContent  = impact.min;
+    $("uplift-max").textContent  = impact.max;
+    $("uplift-from").textContent = "€ " + base.toLocaleString("it-IT") + "/m²";
+    $("uplift-to").textContent   = "€ " + afterMin.toLocaleString("it-IT") + "–" + afterMax.toLocaleString("it-IT") + "/m²";
+    $("uplift-city").textContent = prefs.city;
+
+    // Time to sell
+    const tts = TIME_TO_SELL_CITY[prefs.city] || TIME_TO_SELL_NATIONAL;
+    const scope = TIME_TO_SELL_CITY[prefs.city] ? prefs.city : "nazionale";
+    $("tts-before").textContent = tts.before;
+    $("tts-after").textContent  = tts.after;
+    $("tts-saved").textContent  = "−" + (tts.before - tts.after);
+    $("tts-scope").textContent  = scope;
+
+    // Investment row
+    if (analysis && analysis.riepilogo_costi) {
+      const totale = Number(analysis.riepilogo_costi.totale) || 0;
+      $("invest-amount").textContent = "€ " + totale.toLocaleString("it-IT");
+      // Recupero atteso: lo calcoliamo come uplift % medio applicato al prezzo di un appartamento "tipo" 80mq
+      const aptTypicalValue = base * 80;
+      const upliftMid = (impact.min + impact.max) / 2;
+      const recoveryEst = Math.round(aptTypicalValue * upliftMid / 100 / 100) * 100;
+      $("invest-return").textContent = "+€ " + recoveryEst.toLocaleString("it-IT") + " su 80m²";
+    } else {
+      $("invest-amount").textContent = "—";
+      $("invest-return").textContent = "—";
+    }
+
+    // Interventi grid — dinamici dall'analisi
+    const grid = $("interv-grid");
+    grid.innerHTML = "";
+    if (analysis && analysis.stanze && analysis.stanze[0] && analysis.stanze[0].interventi && analysis.stanze[0].interventi.length) {
+      const interv = analysis.stanze[0].interventi.slice(0, 4);   // mostriamo max 4 per leggibilità
+      $("interv-title").textContent = interv.length + " interventi prioritari";
+      $("interv-sub").textContent = "Stima di costo basata su mercato locale e fornitori medi della zona di " + prefs.city + ".";
+      interv.forEach((it, i) => {
+        const num = String(i + 1).padStart(2, "0");
+        const cmin = Number(it.costo_min || 0);
+        const cmax = Number(it.costo_max || 0);
+        const costLabel = (cmin && cmax && cmin !== cmax)
+          ? "€ " + cmin.toLocaleString("it-IT") + "–" + cmax.toLocaleString("it-IT")
+          : "€ " + (cmax || cmin || 0).toLocaleString("it-IT");
+        const card = document.createElement("div");
+        card.className = "interv";
+        card.innerHTML = `
+          <div class="interv-num">${num} / ${escapeHtml(it.titolo || "Intervento")}</div>
+          <div class="interv-title">${escapeHtml((it.dettaglio || "").slice(0, 60))}</div>
+          <div class="interv-desc">${escapeHtml(it.dettaglio || "")}</div>
+          <div class="interv-cost">
+            <span class="label">Costo stimato</span>
+            <span class="price">${costLabel}</span>
+          </div>`;
+        grid.appendChild(card);
+      });
+    } else {
+      $("interv-title").textContent = "Interventi prioritari";
+      grid.innerHTML = `<div class="interv-empty">Lista interventi non disponibile per questo esempio. Registrati per ottenere il preventivo completo.</div>`;
+    }
+
+    // Show result
+    resultStage.classList.add("show");
+    resultStage.classList.add("fade-in");
+
+    stepNum.textContent = "✓";
+    stepLabel.textContent = "Risultato pronto";
+
+    // Reveal register section first (so user sees something), but keep submit
+    // button disabled until Firestore write is confirmed.
+    setTimeout(() => {
+      registerSection.classList.remove("hidden");
+      registerSection.classList.add("fade-in");
+    }, 400);
+
+    // Save to Firestore — ALWAYS, even if generation used fallback.
+    // We still want to preserve prefs+analysis so the user can continue in the
+    // configurator. Without staged image, the configurator will show only the orig.
+    // Disable form submit until save completes, so the magic link doesn't get
+    // sent before the doc exists.
+    const submitBtn = $("reg-submit-btn");
+    const origSubmitLabel = submitBtn ? submitBtn.innerHTML : null;
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = "Salvataggio in corso…";
+    }
+    const ok = await recordGeneration({
+      prefs: prefs,
+      analysis: analysis,
+      stagedB64: state.stagedB64,
+      stagedMime: state.stagedMime,
+      origB64: state.fileB64,
+      origMime: state.fileMime,
+      origName: (state.file && state.file.name) || "original.jpg"
+    });
+    if (submitBtn && origSubmitLabel) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = origSubmitLabel;
+    }
+    if (ok) {
+      state.saved = true;
+      track(usedFallback ? "landing_generate_fallback_saved" : "landing_generate_success");
+    } else {
+      // Show prominent error so user doesn't sit waiting for a magic link that won't work
+      showError(
+        "Non siamo riusciti a salvare la tua analisi. "
+        + "Apri DevTools → Console per il dettaglio tecnico. "
+        + "Riprova dopo qualche minuto."
+      );
+      track("landing_generate_save_failed");
+    }
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+
+  // ════════════════════════════════════════════════════════════════════════
+  // RESULT ACTIONS
+  // ════════════════════════════════════════════════════════════════════════
+  $("redo-btn").addEventListener("click", () => {
+    resultStage.classList.remove("show");
+    studioBody.classList.remove("hidden");
+    state.step = 3;
+    stepNum.textContent = "3";
+    stepLabel.textContent = "Pronto a generare";
+    hideError();
+    // Note: we DON'T reset the quota check — they've used their 1 free.
+    // The button on next click will detect quota and route to register.
+  });
+  $("download-btn").addEventListener("click", () => {
+    showError("Per scaricare la foto in alta risoluzione, completa la registrazione qui sotto.");
+    registerSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  // ════════════════════════════════════════════════════════════════════════
+  // MAGIC LINK REGISTRATION (Firebase Email Link Auth)
+  // ════════════════════════════════════════════════════════════════════════
+  async function sendMagicLink(email) {
+    await whenFbReady();
+    if (!window._fbAuth || !window._fbSendSignInLinkToEmail) {
+      throw new Error("Servizio di autenticazione non disponibile. Riprova tra un momento.");
+    }
+    // The return URL is the configurator itself. We pass ?bootstrap={anonId} so the
+    // configurator can fetch the payload from Firestore (anonGenerations/{anonId}).
+    const url = APP_URL + "?bootstrap=" + encodeURIComponent(getAnonId());
+    const settings = {
+      url: url,
+      handleCodeInApp: true
+    };
+    await window._fbSendSignInLinkToEmail(window._fbAuth, email, settings);
+    // Firebase requires the email to be stored so it can be verified on link click
+    window.localStorage.setItem("emailForSignIn", email);
+    // Mark this bootstrap as pending
+    window.localStorage.setItem("staged_bootstrap_anonId", getAnonId());
+  }
+
+  // Helper: surface registration errors inline, under the form, with actionable hints
+  function showRegError(title, text, hintHtml) {
+    const box  = $("reg-err");
+    const tEl  = $("reg-err-title");
+    const xEl  = $("reg-err-text");
+    const hEl  = $("reg-err-hint");
+    if (tEl) tEl.textContent = title || "Attenzione.";
+    if (xEl) xEl.textContent = " " + (text || "");
+    if (hEl) hEl.innerHTML = hintHtml || "";
+    if (box) box.classList.add("show");
+  }
+  function hideRegError() {
+    const box = $("reg-err"); if (box) box.classList.remove("show");
+  }
+
+  $("register-form").addEventListener("submit", async e => {
+    e.preventDefault();
+    hideRegError();
+    const emailEl = $("reg-email");
+    const email = (emailEl.value || "").trim();
+    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      showRegError("Email non valida.", "Inserisci un indirizzo email completo.");
+      emailEl.focus();
+      return;
+    }
+    // Hard guard: never send a magic link if we don't have a saved Firestore doc.
+    // Without it the configurator will fail with "Analisi non trovata".
+    if (!state.saved) {
+      showRegError(
+        "Salvataggio non completato.",
+        "Aspetta un attimo che la tua analisi sia salvata, poi riprova.",
+        "Se l'attesa persiste oltre 10 secondi, controlla DevTools → Console per dettagli."
+      );
+      return;
+    }
+    const btn = $("reg-submit-btn");
+    const origBtn = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = "Invio in corso…";
+
+    track("landing_email_submitted", { email_domain: email.split("@")[1] });
+
+    try {
+      await sendMagicLink(email);
+      // Show success card
+      $("sent-email").textContent = email;
+      $("register-card-form").style.display = "none";
+      $("register-card-sent").style.display = "block";
+      track("landing_magic_link_sent");
+    } catch (err) {
+      console.error("[magic link] failed:", err);
+      console.error("[magic link] code:", err && err.code);
+      btn.innerHTML = origBtn;
+      btn.disabled = false;
+
+      // Map Firebase error codes to actionable hints
+      const code = (err && err.code) || "";
+      let title = "Invio link non riuscito.";
+      let text  = err.message || "Riprova tra un momento.";
+      let hint  = "";
+
+      if (code === "auth/operation-not-allowed") {
+        title = "Magic link non abilitato lato Firebase.";
+        text  = "Il provider 'Email link (passwordless sign-in)' è disattivato sul progetto staged-ai.";
+        hint  = "Soluzione (30 secondi):<br>"
+              + "1. Apri <code>console.firebase.google.com</code> → progetto <b>staged-ai</b><br>"
+              + "2. Authentication → Sign-in method → clicca <b>Email/Password</b><br>"
+              + "3. Attiva la seconda riga <b>Email link (passwordless sign-in)</b> → Save";
+      } else if (code === "auth/unauthorized-domain") {
+        title = "Questo dominio non è autorizzato.";
+        text  = "Il dominio <code>" + location.hostname + "</code> non è in 'Authorized domains' del progetto Firebase.";
+        hint  = "Soluzione: Firebase Console → Authentication → Settings → Authorized domains → Add domain → <code>"
+              + location.hostname + "</code>";
+      } else if (code === "auth/invalid-email") {
+        title = "Email non valida.";
+        text  = "Controlla il formato dell'indirizzo email.";
+      } else if (code === "auth/missing-android-pkg-name" || code === "auth/missing-continue-uri" || code === "auth/invalid-continue-uri") {
+        title = "Configurazione URL di ritorno non valida.";
+        text  = err.message;
+        hint  = "L'URL di ritorno configurato è: <code>" + APP_URL + "</code>. Deve essere un URL HTTP/HTTPS valido.";
+      } else if (code === "auth/quota-exceeded" || code === "auth/too-many-requests") {
+        title = "Limite invii temporaneo raggiunto.";
+        text  = "Riprova tra qualche minuto.";
+      } else if (code === "auth/network-request-failed") {
+        title = "Errore di rete.";
+        text  = "Controlla la connessione e riprova.";
+      } else {
+        hint  = "Codice errore: <code>" + (code || "sconosciuto") + "</code>. Vedi DevTools → Console per dettagli.";
+      }
+
+      showRegError(title, text, hint);
+      track("landing_magic_link_fail", { code: code, reason: (err.message || "").slice(0, 100) });
+    }
+  });
+
+  $("resend-link").addEventListener("click", async () => {
+    const email = $("sent-email").textContent;
+    if (!email || email === "—") return;
+    const link = $("resend-link");
+    link.textContent = "Invio…";
+    try {
+      await sendMagicLink(email);
+      link.textContent = "✓ Inviato di nuovo";
+      setTimeout(() => { link.textContent = "Non l'hai ricevuto? Invia di nuovo"; }, 4000);
+    } catch (e) {
+      link.textContent = "Errore — riprova tra qualche secondo";
+      setTimeout(() => { link.textContent = "Non l'hai ricevuto? Invia di nuovo"; }, 4000);
+    }
+  });
+
+  // ════════════════════════════════════════════════════════════════════════
+  // HERO CTA — smooth scroll
+  // ════════════════════════════════════════════════════════════════════════
+  $("hero-cta").addEventListener("click", e => {
+    e.preventDefault();
+    document.getElementById("studio").scrollIntoView({ behavior: "smooth", block: "start" });
+    setTimeout(() => uploadZone.focus({ preventScroll: true }), 600);
+    track("landing_hero_cta");
+  });
+
+  // ════════════════════════════════════════════════════════════════════════
+  // BOOT — pre-check anon quota, prefill state.style etc
+  // ════════════════════════════════════════════════════════════════════════
+  console.log(
+    "%c[staged.ai landing v2]%c\n" +
+    "  origin:    " + location.origin + "\n" +
+    "  backend:   " + BACKEND_URL + "\n" +
+    "  anon-id:   " + getAnonId() + "\n" +
+    "  app-url:   " + APP_URL + "\n" +
+    "  If generation fails with 'Failed to fetch', this origin must be added to\n" +
+    "  ALLOWED_ORIGINS of the Cloud Run backend (or test from http://localhost:5173).",
+    "color:#c9a86c;font-weight:bold;", "color:inherit;"
+  );
+  track("landing_view", { ref: document.referrer.slice(0, 100) });
+
+  // If user already used their free trial in a previous session, hint at it
+  whenFbReady().then(async () => {
+    const ok = await canGenerateAnonymously();
+    if (!ok && trialStatus) {
+      trialStatus.textContent = "già usata — registrati per altri 10 crediti";
+      trialStatus.style.color = "var(--red)";
+    }
+  });
+
+})();
+</script>
+
+</body>
+</html>
