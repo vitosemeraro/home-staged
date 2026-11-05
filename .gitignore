@@ -1,0 +1,10 @@
+# Mai nel repository: chiavi e file locali
+staged-ai-firebase-adminsdk-*.json
+localStorage.hs_gkey
+*.zip
+_backup/
+_handoff/
+_hp66/
+_hpimg/
+.firebase/
+node_modules/

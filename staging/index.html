@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>staged.ai — Home staging AI per l'immobiliare italiano</title>
+<meta name="description" content="Carica la foto di una stanza e ottieni il risultato staged, gli interventi con i costi reali della tua città e un preventivo pronto da condividere, col brand della tua agenzia.">
+<link rel="canonical" href="https://home-staged.ai/index.html">
+<link rel="alternate" hreflang="it" href="https://home-staged.ai/index.html">
+<link rel="alternate" hreflang="en" href="https://home-staged.ai/en/index.html">
+<link rel="alternate" hreflang="x-default" href="https://home-staged.ai/index.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Hanken+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/home.css">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/site.js" defer></script>
+
+<!-- Firebase 10.12 (modular) — exposes globals on window for the studio engine -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyANmCpxue93WPqCahwfYvbMvXF8lZx53L8",
+    authDomain: "staged-ai.firebaseapp.com",
+    projectId: "staged-ai",
+    storageBucket: "staged-ai.firebasestorage.app",
+    messagingSenderId: "833352316081",
+    appId: "1:833352316081:web:abcdef"
+  };
+  const fbApp = initializeApp(firebaseConfig);
+  window._fbAuth     = getAuth(fbApp);
+  window._fbDb       = getFirestore(fbApp);
+  window._fbDoc      = doc;
+  window._fbGetDoc   = getDoc;
+  window._fbSetDoc   = setDoc;
+  window._fbServerTS = serverTimestamp;
+  window._fbSendSignInLinkToEmail = sendSignInLinkToEmail;
+  window._fbIsSignInWithEmailLink = isSignInWithEmailLink;
+  window._fbSignInWithEmailLink   = signInWithEmailLink;
+  window._fbReady = true;
+  document.dispatchEvent(new CustomEvent('fbready'));
+</script>
+<script src="assets/studio.js" defer></script>
+</head>
+<body>
+<a id="top"></a>
+
+<!-- ============ TOP BAR ============ -->
+<header class="topbar">
+  <div class="container topbar__inner">
+    <a class="brand" href="index.html">
+      <span class="brand__mark">s</span>
+      <span><b>staged</b><span class="tld">.ai</span></span>
+    </a>
+    <nav class="nav" aria-label="Principale">
+      <a href="#funziona">Come funziona</a>
+      <a href="#finalita">Cosa fa</a>
+      <a href="#perchi">Per chi</a>
+      <a href="#prezzi">Prezzi</a>
+      <a href="#blog">Blog</a>
+      <a href="chi-siamo.html">Chi siamo</a>
+    </nav>
+    <div class="topbar__right">
+      <div class="lang" role="group" aria-label="Lingua">
+        <a href="index.html" aria-current="true">IT</a>
+        <a href="en/index.html">EN</a>
+      </div>
+      <a class="btn btn--primary btn--sm" href="#studio">Prova gratis</a>
+      <button class="nav-burger" aria-label="Apri menu"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 1 · HERO ============ -->
+<section class="section--tight container hero" id="prova">
+  <div class="hero__grid">
+    <div class="hero__copy">
+      <span class="eyebrow">Home staging virtuale · AI · Italia</span>
+      <h1 class="display hero__title">Trasforma una foto in un appartamento che <em>si vende</em></h1>
+      <p class="lead">Carica una stanza vuota o da rinfrescare e ottieni il risultato staged, gli interventi consigliati con i costi reali della tua città e un preventivo pronto da condividere — col brand della tua agenzia.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary btn--lg" href="#studio">Prova ora — gratis</a>
+        <a class="btn btn--outline btn--lg" href="#funziona">Come funziona</a>
+      </div>
+      <span class="hero__note"><span class="tick">✓</span> 1 prova gratis · poi 10 crediti registrandoti · nessuna carta</span>
+    </div>
+
+    <div class="hero__media">
+      <div class="ba-tabs" role="tablist" aria-label="Esempi per finalità">
+        <button class="ba-tab is-on" type="button" data-img="assets/img/ba-staged.jpg">Home Staging</button>
+        <button class="ba-tab" type="button" data-img="assets/img/ba-ristrutturazione.jpg">Ristrutturazione</button>
+        <button class="ba-tab" type="button" data-img="assets/img/ba-declutter.jpg">Decluttering</button>
+        <button class="ba-tab" type="button" data-img="assets/img/ba-svuota.jpg">Svuota stanza</button>
+      </div>
+      <div class="ba" id="hero-ba" aria-label="Confronto prima e dopo — trascina la linea">
+        <div class="ba__layer"><img id="hero-ba-after" src="assets/img/ba-staged.jpg" alt="Dopo" width="800" height="640"></div>
+        <div class="ba__layer ba__layer--before"><img src="assets/img/ba-before.jpg" alt="Prima" width="800" height="640"></div>
+        <div class="ba__handle" aria-hidden="true"><span class="ba__knob"></span></div>
+        <span class="ba__tag ba__tag--before">Prima</span>
+        <span class="ba__tag ba__tag--after">Dopo</span>
+      </div>
+      <div class="stat-float">
+        <span class="big">Prima<span style="font-size:18px;color:var(--gold-deep)"> → Dopo</span></span>
+        <span class="lbl">in un click</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 · STUDIO TRIAL ============ -->
+<section class="section--tight container" id="studio">
+  <div class="studio reveal">
+    <div class="studio__head">
+      <div class="studio__title"><span class="live"></span><span>Studio staging · anteprima live</span></div>
+      <div class="studio__step"><span class="n">1</span><span>Carica una foto</span></div>
+    </div>
+    <div class="studio__body">
+      <input type="file" id="hs-file" accept="image/*" hidden>
+      <div class="studio__drop" id="hs-drop" role="button" tabindex="0">
+        <span class="di">↑</span>
+        <b>Trascina la foto di una stanza</b>
+        <span>o clicca per selezionare il file</span>
+        <div class="hint">JPG · PNG · max 12MB</div>
+      </div>
+      <div id="hs-preview" class="hs-preview">
+        <span id="hs-preview-thumb" class="hs-preview__thumb"></span>
+        <div class="hs-preview__meta"><b id="hs-preview-name">foto.jpg</b><span>Pronta per la generazione</span></div>
+        <button type="button" id="hs-change" class="btn btn--ghost btn--sm">Cambia</button>
+      </div>
+
+      <div>
+        <div class="field"><label>Finalità</label></div>
+        <div class="fin-pick" data-single role="group" aria-label="Finalità">
+          <button class="fp" data-fin="staging" aria-pressed="true"><span class="g">h</span><span>Home Staging</span></button>
+          <button class="fp" data-fin="ristrutturazione" aria-pressed="false"><span class="g">r</span><span>Ristrutturazione</span></button>
+          <button class="fp" data-fin="foto" aria-pressed="false"><span class="g">d</span><span>Ritocco &amp; Decluttering</span></button>
+          <button class="fp" data-fin="svuota" aria-pressed="false"><span class="g">s</span><span>Svuota stanza</span></button>
+        </div>
+      </div>
+      <div class="studio__params">
+        <div class="field">
+          <label for="hs-city">Città</label>
+          <input class="input" type="text" id="hs-city" placeholder="Milano, Roma, Torino…" autocomplete="address-level2">
+        </div>
+        <div class="field" id="hs-budget-field">
+          <label for="hs-budget">Budget indicativo</label>
+          <select class="input" id="hs-budget">
+            <option value="3000">Basso · ~€3.000</option>
+            <option value="8000" selected>Medio · ~€8.000</option>
+            <option value="15000">Alto · ~€15.000</option>
+            <option value="30000">Premium · ~€30.000</option>
+          </select>
+        </div>
+      </div>
+      <div class="field" id="hs-style-field">
+        <label>Stile d'arredo</label>
+        <div class="chips-row" data-single id="hs-style" role="group" aria-label="Stile d'arredo">
+          <button class="opt" aria-pressed="true">Japandi</button>
+          <button class="opt" aria-pressed="false">Scandinavo</button>
+          <button class="opt" aria-pressed="false">Moderno</button>
+          <button class="opt" aria-pressed="false">Classico</button>
+          <button class="opt" aria-pressed="false">Minimal</button>
+        </div>
+      </div>
+      <div class="field hidden" id="hs-photostyle-field">
+        <label>Stile fotografico</label>
+        <div class="chips-row" data-single id="hs-photostyle" role="group" aria-label="Stile fotografico">
+          <button class="opt" aria-pressed="true">Bright &amp; Airy</button>
+          <button class="opt" aria-pressed="false">Caldo</button>
+          <button class="opt" aria-pressed="false">Naturale</button>
+          <button class="opt" aria-pressed="false">Editoriale</button>
+        </div>
+      </div>
+      <div class="field hidden" id="hs-empty-field">
+        <label class="hs-check"><input type="checkbox" id="hs-empty-full"> <span>Svuota completamente — rimuovi anche cucine/armadi incassati e sanitari</span></label>
+      </div>
+
+      <div class="studio__go">
+        <span class="info"><b>1 prova gratis</b>: elabora la tua foto e ottieni l'elenco degli interventi + stima del preventivo</span>
+        <button class="btn btn--primary" type="button" id="hs-generate">Genera staging →</button>
+      </div>
+
+      <div id="hs-error" class="form-msg err" style="display:none"><span id="hs-error-text"></span></div>
+
+      <div id="hs-loading" class="hs-loading">
+        <div class="hs-loading__row"><span class="hs-spinner" aria-hidden="true"></span><span id="hs-loading-msg" class="mono">Analizzo la stanza…</span></div>
+        <div class="hs-loading__bar"><span id="hs-loading-bar"></span></div>
+        <div id="hs-loading-stat" class="hs-loading__stat"></div>
+      </div>
+
+      <div id="hs-result" class="hs-result">
+        <div class="hs-result__frame">
+          <img id="hs-result-img" alt="Risultato staged">
+          <button type="button" id="hs-result-toggle" class="hs-result__toggle">Mostra prima</button>
+        </div>
+        <div id="hs-register" class="hs-register hidden">
+          <h3 class="h3">Vuoi analizzare tutto l'appartamento e modificare le foto?</h3>
+          <p>Registrati con la tua email: ricevi <b>10 crediti gratis</b> e ritrovi questo progetto già aperto e modificabile.</p>
+          <form id="hs-register-form" class="newsletter" novalidate>
+            <div class="field"><label for="hs-email">Email <span class="req">*</span></label><input class="input" type="email" id="hs-email" required placeholder="tu@esempio.it" autocomplete="email"></div>
+            <button class="btn btn--primary" type="submit">Continua →</button>
+          </form>
+          <div id="hs-sent" class="hs-sent">
+            <b>✓ Controlla la tua email</b>
+            <span>Ti abbiamo inviato un link di accesso a <b id="hs-sent-email"></b>. Cliccalo per aprire il tuo progetto in staged.ai — nessuna password.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3 · SOCIAL PROOF ============ -->
+<section class="section--tight proof">
+  <div class="container proof__grid proof__grid--3 reveal">
+    <div class="proof__item"><span class="proof__num">81<span class="u">%</span></span><span class="proof__lbl">degli agenti: lo staging aiuta l'acquirente a immaginarsi la casa</span></div>
+    <div class="proof__item"><span class="proof__num">+1–5<span class="u">%</span></span><span class="proof__lbl">sul valore dell'offerta per gli immobili staged</span></div>
+    <div class="proof__item"><span class="proof__num">48<span class="u">%</span></span><span class="proof__lbl">degli agenti: lo staging riduce il tempo sul mercato</span></div>
+  </div>
+  <p class="container proof__src reveal">Fonte: National Association of REALTORS® — <em>Profile of Home Staging 2023</em>. Stime indicative, variano per mercato e immobile.</p>
+</section>
+
+<!-- ============ 4 · COME FUNZIONA ============ -->
+<section class="section container" id="funziona">
+  <div class="sec-head reveal">
+    <span class="eyebrow">Come funziona</span>
+    <h2 class="h2">Tre passi, <em>nessuna competenza di design</em></h2>
+  </div>
+  <div class="steps reveal">
+    <div class="step">
+      <div class="step__media"><img class="step__photo" src="assets/img/step-1.png" loading="lazy" alt="Carica le foto" width="600" height="408"><span class="step__n">01</span></div>
+      <h4>Carica le foto</h4>
+      <p>Carica gli scatti dell'immobile. Per ogni foto scegli una finalità: staging, ristrutturazione, ritocco o svuota stanza.</p>
+    </div>
+    <div class="step">
+      <div class="step__media"><img class="step__photo" src="assets/img/step-2.png" loading="lazy" alt="Imposta stile e budget" width="600" height="408"><span class="step__n">02</span></div>
+      <h4>Imposta stile e budget</h4>
+      <p>Scegli città, stile e una palette Sikkens reale. L'AI rispetta pareti, finestre e proporzioni della stanza reale.</p>
+    </div>
+    <div class="step">
+      <div class="step__media"><img class="step__photo" src="assets/img/step-3.png" loading="lazy" alt="Risultato staged e preventivo" width="600" height="408"><span class="step__n">03</span></div>
+      <h4>Ricevi risultato e preventivo</h4>
+      <p>Staging fotorealistico, interventi con costi locali e preventivo — salvati come progetto versionabile, condivisibile col tuo brand.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5 · LE 4 FINALITÀ ============ -->
+<section class="section bg-cream2">
+  <div class="container" id="finalita">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Una foto, quattro finalità</span>
+      <h2 class="h2">Scegli la <em>finalità</em> per ogni foto</h2>
+      <p class="lead">Ogni foto può essere elaborata in modo diverso — e puoi tenere più varianti della stessa stanza affiancate.</p>
+    </div>
+    <div class="finalita reveal">
+      <div class="fin-card">
+        <img class="fin-card__img" src="assets/img/fin-staging.png" loading="lazy" alt="Esempio Home Staging" width="600" height="450">
+        <h4>Home Staging</h4>
+        <p>Aggiunge arredo decorativo a una stanza vuota o spenta, nello stile scelto.</p>
+        <div class="fc-meta"><span class="tagk tagk--on">stile/budget</span><span class="tagk tagk--on">preventivo</span></div>
+      </div>
+      <div class="fin-card">
+        <img class="fin-card__img" src="assets/img/fin-ristrutturazione.png" loading="lazy" alt="Esempio Ristrutturazione" width="600" height="450">
+        <h4>Ristrutturazione</h4>
+        <p>Ammette opere edili — pavimenti, pareti, infissi — con stime di costo complete.</p>
+        <div class="fc-meta"><span class="tagk tagk--on">stile/budget</span><span class="tagk tagk--on">preventivo</span></div>
+      </div>
+      <div class="fin-card">
+        <img class="fin-card__img" src="assets/img/fin-declutter.png" loading="lazy" alt="Esempio Ritocco e Decluttering" width="600" height="450">
+        <h4>Ritocco &amp; Decluttering</h4>
+        <p>Migliora la foto e fa un decluttering leggero — nessun arredo aggiunto, niente preventivo.</p>
+        <div class="fc-meta"><span class="tagk tagk--off">no config</span><span class="tagk tagk--off">no preventivo</span></div>
+      </div>
+      <div class="fin-card">
+        <img class="fin-card__img" src="assets/img/fin-svuota.png" loading="lazy" alt="Esempio Svuota stanza" width="600" height="450">
+        <h4>Svuota stanza</h4>
+        <p>Rimuove gli arredi lasciando la stanza vuota, con preventivo di sgombero. Modalità profonda opzionale per gli incassati.</p>
+        <div class="fc-meta"><span class="tagk tagk--off">no config</span><span class="tagk tagk--on">sgombero</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6 · vs STRUMENTI GENERICI ============ -->
+<section class="section container" id="confronto">
+  <div class="sec-head reveal">
+    <span class="eyebrow">Perché staged.ai</span>
+    <h2 class="h2">Fatto per gli annunci, <em>non</em> per designer</h2>
+    <p class="lead">Gli editor AI generici ti lasciano a sistemare pareti storte e mobili finti. staged.ai è tarato sull'immobiliare italiano, dall'inizio alla fine.</p>
+  </div>
+  <div class="compare reveal">
+    <div class="compare__row compare__head">
+      <div class="c-feat">Cosa conta per un annuncio</div>
+      <div class="c-us"><span class="brand-mini">staged</span>.ai</div>
+      <div class="c-them">Strumenti generici</div>
+    </div>
+    <div class="compare__row">
+      <div class="c-label">Rispetta pareti e prospettiva<small>lock geometrico, niente stanze deformate</small></div>
+      <div class="c-us"><span class="yes">✓</span></div>
+      <div class="c-them"><span class="no">a fortuna</span></div>
+    </div>
+    <div class="compare__row">
+      <div class="c-label">4 finalità in un click<small>staging · ristruttur. · svuota · ritocco</small></div>
+      <div class="c-us"><span class="yes">✓</span></div>
+      <div class="c-them"><span class="no">prompt manuali</span></div>
+    </div>
+    <div class="compare__row">
+      <div class="c-label">Costi e preventivi localizzati<small>per città</small></div>
+      <div class="c-us"><span class="yes">✓</span></div>
+      <div class="c-them"><span class="no">✕</span></div>
+    </div>
+    <div class="compare__row">
+      <div class="c-label">Elenco opere e interventi dettagliato<small>per stanza, con stima costi</small></div>
+      <div class="c-us"><span class="yes">✓</span></div>
+      <div class="c-them"><span class="no">✕</span></div>
+    </div>
+    <div class="compare__row">
+      <div class="c-label">Progetto condivisibile col tuo brand<small>white-label, logo + colori</small></div>
+      <div class="c-us"><span class="yes">✓</span></div>
+      <div class="c-them"><span class="no">✕</span></div>
+    </div>
+    <div class="compare__row">
+      <div class="c-label">Versioni e prompt per stanza<small>più varianti, rigenerazione</small></div>
+      <div class="c-us"><span class="yes">✓</span></div>
+      <div class="c-them"><span class="no">✕</span></div>
+    </div>
+    <div class="compare__row">
+      <div class="c-label">Scelta di stile e palette<small>coerente in ogni stanza</small></div>
+      <div class="c-us"><span class="yes">✓</span></div>
+      <div class="c-them"><span class="no">prompt manuali</span></div>
+    </div>
+    <div class="compare__row">
+      <div class="c-label">Elenco progetti salvati<small>versionabili e riapribili</small></div>
+      <div class="c-us"><span class="yes">✓</span></div>
+      <div class="c-them"><span class="no">✕</span></div>
+    </div>
+    <div class="compare__row">
+      <div class="c-label">Download in più formati<small>4:3 · 16:9 · 1:1 · 9:16</small></div>
+      <div class="c-us"><span class="yes">✓</span></div>
+      <div class="c-them"><span class="no">✕</span></div>
+    </div>
+    <div class="compare__row">
+      <div class="c-label">Customizzazioni su misura<small>feature su richiesta, in tempi rapidi</small></div>
+      <div class="c-us"><span class="yes">✓</span></div>
+      <div class="c-them"><span class="no">✕</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7 · PER CHI ============ -->
+<section class="section bg-cream2">
+  <div class="container" id="perchi">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Per chi</span>
+      <h2 class="h2">Una piattaforma, <em>quattro</em> flussi</h2>
+    </div>
+    <div class="personas reveal">
+      <div class="persona">
+        <span class="p-ico">a</span>
+        <h4>Agenti immobiliari</h4>
+        <p>Mostra ai proprietari il potenziale prima di firmare l'incarico e valorizza l'annuncio.</p>
+        <ul>
+          <li>Report PDF brandizzato per il proprietario</li>
+          <li>Confronto Prima/Dopo per il listino</li>
+          <li>Stima basata su comparabili OMI</li>
+        </ul>
+      </div>
+      <div class="persona">
+        <span class="p-ico">p</span>
+        <h4>Property manager</h4>
+        <p>Ottimizza i portafogli short-term con interventi a basso costo che fanno crescere ADR e occupazione.</p>
+        <ul>
+          <li>Taglio analisi STR dedicato</li>
+          <li>Elaborazione in blocco su più appartamenti</li>
+          <li>Confronto stili per target</li>
+        </ul>
+      </div>
+      <div class="persona">
+        <span class="p-ico">o</span>
+        <h4>Proprietari / Host</h4>
+        <p>Vedi il potenziale di casa tua prima di spendere, poi condividilo col tuo agente o con gli ospiti.</p>
+        <ul>
+          <li>Prova senza impegno</li>
+          <li>Visualizza prima di ogni lavoro</li>
+          <li>Link pubblico condivisibile</li>
+        </ul>
+      </div>
+      <div class="persona">
+        <span class="p-ico">h</span>
+        <h4>Home stager</h4>
+        <p>Presenta moodboard e preventivi ai clienti in pochi minuti — prova tre stili prima di muovere un mobile.</p>
+        <ul>
+          <li>Più varianti per stanza</li>
+          <li>Lista interventi con costi locali</li>
+          <li>Preventivo cliente personalizzabile</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8 · RECENSIONI ============ -->
+<section class="section container" id="recensioni">
+  <div class="sec-head reveal">
+    <span class="eyebrow">Cosa dicono i primi 200</span>
+    <h2 class="h2">Provato sul <em>campo</em></h2>
+    <p class="lead mono" style="font-size:13px">Beta privata · marzo–maggio 2026</p>
+  </div>
+  <div class="reviews reveal">
+    <div class="review">
+      <div class="stars">★★★★★</div>
+      <q>L'ho usato per un bilocale a Porta Romana che avevo da quattro mesi. Mostrato il PDF al proprietario lunedì, sistemato il listino mercoledì, venduto in tre settimane.</q>
+      <div class="who"><span class="avatar">CV</span><span><b>Claudia Verdi</b><span>Agente immobiliare · Milano</span></span></div>
+    </div>
+    <div class="review">
+      <div class="stars">★★★★★</div>
+      <q>Le modalità svuota stanza e ristrutturazione finalmente parlano al cliente. Vede dove vanno i soldi prima ancora di toccare qualcosa.</q>
+      <div class="who"><span class="avatar">MR</span><span><b>Marco Rinaldi</b><span>Home stager · Torino</span></span></div>
+    </div>
+    <div class="review">
+      <div class="stars">★★★★★</div>
+      <q>Sul nostro portafoglio short-term il taglio STR si è ripagato in un weekend. Stessi mobili, foto migliori, ADR più alto.</q>
+      <div class="who"><span class="avatar">GP</span><span><b>Giulia Penna</b><span>Property manager · Firenze</span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9 · PREZZI ============ -->
+<section class="section bg-cream2">
+  <div class="container" id="prezzi">
+    <div class="sec-head center reveal">
+      <span class="eyebrow eyebrow--plain">Promo lancio</span>
+      <h2 class="h2">Inizia gratis, cresci quando <em>funziona</em></h2>
+    </div>
+    <div class="pricing reveal">
+      <div class="plan">
+        <span class="plan__name">Prova</span>
+        <div class="plan__price">€0</div>
+        <p class="plan__desc">Per provarlo su una stanza vera, senza carta.</p>
+        <ul>
+          <li><span class="ck">✓</span> <span>10 crediti gratis alla registrazione</span></li>
+          <li><span class="ck">✓</span> <span>Tutte le 4 finalità</span></li>
+          <li><span class="ck">✓</span> <span>Download foto con crop</span></li>
+          <li><span class="ck">✓</span> <span>1 prova senza registrarti</span></li>
+        </ul>
+        <a class="btn btn--outline" href="app.html">Inizia gratis</a>
+      </div>
+      <div class="plan plan--feat">
+        <span class="plan__ribbon">Più scelto</span>
+        <span class="plan__name">Pro</span>
+        <div class="plan__price">€19<span class="per">/mese</span></div>
+        <p class="plan__desc">Per agenti e manager che pubblicano ogni settimana.</p>
+        <ul>
+          <li><span class="ck">✓</span> <span>Crediti mensili + 10 gratis per iniziare</span></li>
+          <li><span class="ck">✓</span> <span>Varianti per stanza illimitate e gratis</span></li>
+          <li><span class="ck">✓</span> <span>Report PDF multi-variante</span></li>
+          <li><span class="ck">✓</span> <span>Taglio analisi STR / Generico</span></li>
+          <li><span class="ck">✓</span> <span>Link condiviso brandizzato</span></li>
+        </ul>
+        <a class="btn btn--primary" href="app.html">Inizia con €19</a>
+      </div>
+      <div class="plan">
+        <span class="plan__name">Agenzia</span>
+        <div class="plan__price">Su misura</div>
+        <p class="plan__desc">White-label completo per team e studi.</p>
+        <ul>
+          <li><span class="ck">✓</span> <span>Brand white-label (logo + colori)</span></li>
+          <li><span class="ck">✓</span> <span>Multi-utente, multi-tenant</span></li>
+          <li><span class="ck">✓</span> <span>Link e report brandizzati</span></li>
+          <li><span class="ck">✓</span> <span>Onboarding dedicato</span></li>
+        </ul>
+        <a class="btn btn--outline" href="contatti.html">Parla con noi</a>
+      </div>
+    </div>
+    <p class="disclaimer-note reveal"><b>Nota metodologica.</b> Prezzi locali da Idealista (Q3 2025) e OMI; impatto staging da EAHSP 2025 e FIAIP 2024. Le stime sono indicative, variano per quartiere/piano/stato e non costituiscono un preventivo formale.</p>
+  </div>
+</section>
+
+<!-- ============ 10 · BLOG ============ -->
+<section class="section container" id="blog">
+  <div class="sec-head reveal">
+    <span class="eyebrow">Blog</span>
+    <h2 class="h2">Guide e <em>dati</em> di mercato</h2>
+  </div>
+  <div class="blog reveal">
+    <article class="post">
+      <div class="post__img ph ph--staged"><span class="ph__label">[ copertina articolo ]</span></div>
+      <span class="post__cat">Guida</span>
+      <h4>Home staging virtuale: cosa dice la legge in Italia</h4>
+      <p>Come usare le foto staged con l'AI negli annunci in modo trasparente e corretto.</p>
+      <span class="post__meta">6 min · maggio 2026</span>
+    </article>
+    <article class="post">
+      <div class="post__img ph ph--empty"><span class="ph__label">[ copertina articolo ]</span></div>
+      <span class="post__cat">Mercato</span>
+      <h4>Quanto incide davvero lo staging sul tempo di vendita</h4>
+      <p>I numeri di FIAIP ed EAHSP, letti per il mercato italiano.</p>
+      <span class="post__meta">8 min · aprile 2026</span>
+    </article>
+    <article class="post">
+      <div class="post__img ph ph--staged"><span class="ph__label">[ copertina articolo ]</span></div>
+      <span class="post__cat">Affitti brevi</span>
+      <h4>STR: gli interventi che alzano l'ADR senza ristrutturare</h4>
+      <p>Mosse a basso costo che migliorano foto e occupazione su Airbnb e Booking.</p>
+      <span class="post__meta">5 min · aprile 2026</span>
+    </article>
+  </div>
+</section>
+
+<!-- ============ 11 · NEWSLETTER / WAITLIST ============ -->
+<section class="section--tight container" id="newsletter">
+  <div class="sec-head reveal" style="margin-bottom:var(--s-6)">
+    <span class="eyebrow">Resta aggiornato</span>
+    <h2 class="h2">Novità di prodotto, <em>una mail ogni tanto</em></h2>
+  </div>
+  <form class="form newsletter reveal"
+        action="https://formspree.io/f/xpqeawjp" method="POST"
+        data-formspree data-success="✓ Iscritto — ti avvisiamo delle novità." data-event="newsletter_signup">
+    <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <input type="hidden" name="_subject" value="Nuova iscrizione newsletter staged.ai">
+    <input type="hidden" name="type" value="newsletter">
+    <div class="field">
+      <label for="nl-email">Email <span class="req">*</span></label>
+      <input class="input" type="email" id="nl-email" name="email" required placeholder="tu@esempio.it" autocomplete="email">
+    </div>
+    <div class="field">
+      <label for="nl-ruolo">Ruolo</label>
+      <select class="input" id="nl-ruolo" name="ruolo">
+        <option value="">Preferisco non dirlo</option>
+        <option value="agente">Agente immobiliare</option>
+        <option value="property-manager">Property manager</option>
+        <option value="host">Host / affitti brevi</option>
+        <option value="altro">Altro</option>
+      </select>
+    </div>
+    <button class="btn btn--primary" type="submit">Iscrivimi</button>
+    <div class="form-msg" role="status" aria-live="polite"></div>
+  </form>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer" id="footer">
+  <div class="container footer__top">
+    <div>
+      <a class="brand" href="index.html"><span class="brand__mark">s</span><span><b>staged</b><span class="tld">.ai</span></span></a>
+      <p class="footer__tag">Home staging AI per l'immobiliare italiano. Risultati fotorealistici, costi locali, il tuo brand.</p>
+    </div>
+    <div class="footer__col">
+      <h5>Prodotto</h5>
+      <a href="#funziona">Come funziona</a>
+      <a href="#finalita">Le 4 finalità</a>
+      <a href="#prezzi">Prezzi</a>
+      <a href="#studio">Studio demo</a>
+    </div>
+    <div class="footer__col">
+      <h5>Azienda</h5>
+      <a href="chi-siamo.html">Chi siamo</a>
+      <a href="contatti.html">Contatti</a>
+      <a href="#blog">Blog</a>
+      <a href="app.html">Accedi all'app</a>
+    </div>
+    <div class="footer__col">
+      <h5>Legale</h5>
+      <a href="privacy-policy.html">Privacy Policy</a>
+      <a href="termini-di-servizio.html">Termini di servizio</a>
+      <a href="cookie-policy.html">Cookie Policy</a>
+      <a href="#" onclick="openCookieSettings();return false;">Preferenze cookie</a>
+    </div>
+  </div>
+  <div class="container footer__bottom">
+    <span>© <span data-year>2026</span> staged.ai · Made in Italy · P.IVA 3652876120</span>
+    <div class="footer__lang" role="group" aria-label="Lingua">
+      <a href="index.html" aria-current="true" style="color:var(--espresso);background:var(--gold);padding:5px 12px;border-radius:var(--r-full)">IT</a>
+      <a href="en/index.html" style="color:rgba(250,248,244,.55);padding:5px 12px">EN</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

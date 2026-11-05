@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /app.html
+Disallow: /import.html
+
+Sitemap: https://home-staged.ai/sitemap.xml

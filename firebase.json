@@ -1,0 +1,29 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "_handoff/**",
+      "_backup/**",
+      "_handoff_extracted/**",
+      "staging/handoff/**",
+      "staging/README-staging.txt",
+      "_prompt-redesign-app.md",
+      "staged.ai-handoff.zip",
+      "storage-cors.json",
+      "_hpimg/**",
+      "_hp66/**",
+      "immaginiHP*.zip",
+      "**/*.zip",
+      "_login_extract/**",
+      "staged-ai-firebase-adminsdk-*.json",
+      "localStorage.hs_gkey",
+      "README.md",
+      "Nuovo Documento di testo.txt",
+      ".claude/**",
+      ".firebase/**"
+    ]
+  }
+}

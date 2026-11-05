@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>staged.ai — Importa da immobiliare.it</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Hanken+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FAF8F4; --cream-2:#F4F0E7; --sand:#ECE5D8; --card:#FFFDF9;
+  --ink:#221D15; --ink-2:#5C5347; --ink-3:#8C8275;
+  --line:#E7E0D1; --line-2:#D8CFBC;
+  --gold:#C9A86C; --gold-deep:#946E32; --gold-soft:#F0E6D0;
+  --espresso:#292318; --sage:#5F6B4E; --sage-soft:#E8EADD;
+  --font-display:'Newsreader',Georgia,serif;
+  --font-sans:'Hanken Grotesk',system-ui,sans-serif;
+  --font-mono:'Spline Sans Mono',ui-monospace,monospace;
+  --r-md:12px; --r-lg:18px; --r-xl:26px; --r-full:999px;
+  --sh-md:0 6px 22px rgba(34,29,21,.07); --sh-lg:0 26px 64px rgba(34,29,21,.11);
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--font-sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+h1,h2,h3{margin:0;font-weight:400}
+.container{width:100%;max-width:1000px;margin-inline:auto;padding-inline:24px}
+
+/* header */
+.site-head{padding:22px 0;border-bottom:1px solid var(--line)}
+.brand{font-family:var(--font-display);font-size:24px;letter-spacing:-.01em}
+.brand em{font-style:italic;color:var(--gold-deep)}
+.brand .dot{color:var(--gold)}
+.head-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.authbtn{padding:9px 18px;border-radius:var(--r-full);background:var(--espresso);color:var(--cream);font-weight:600;font-size:14px}
+.authbtn:hover{background:#1c1710}
+.userbox{font-size:14px;color:var(--ink-2)}
+.linkbtn{color:var(--gold-deep);font-weight:600;text-decoration:underline}
+/* modal auth */
+.modal{position:fixed;inset:0;background:rgba(34,29,21,.45);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal.open{display:flex}
+.modal-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh-lg);padding:28px;width:100%;max-width:400px}
+.modal-card h3{font-family:var(--font-display);font-size:26px;margin-bottom:4px}
+.modal-card .msub{color:var(--ink-2);font-size:14px;margin-bottom:18px}
+.modal-card input{width:100%;padding:13px 15px;border:1px solid var(--line-2);border-radius:var(--r-md);background:var(--cream);font:inherit;margin-bottom:10px}
+.modal-card input:focus{outline:none;border-color:var(--gold)}
+.mrow{display:flex;gap:10px;margin-top:6px}
+.mrow .btn{flex:1;padding:13px;text-align:center}
+.btn-ghost{background:var(--cream);color:var(--ink);border:1px solid var(--line-2)}
+.btn-ghost:hover{background:var(--sand)}
+.gbtn{width:100%;margin-top:12px;padding:13px;border:1px solid var(--line-2);border-radius:var(--r-full);background:#fff;color:var(--ink);font-weight:600}
+.gbtn:hover{background:var(--cream-2)}
+.merr{color:#8a2b22;font-size:13px;margin-top:10px;min-height:18px}
+.mclose{float:right;color:var(--ink-3);font-size:22px;line-height:1}
+.divider{display:flex;align-items:center;gap:10px;color:var(--ink-3);font-size:12px;margin:14px 0}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* hero */
+.hero{padding:64px 0 28px;text-align:center}
+.eyebrow{font-size:12.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep);display:inline-flex;align-items:center;gap:12px;margin-bottom:20px}
+.eyebrow::before{content:"";width:26px;height:1.5px;background:var(--gold)}
+.display{font-family:var(--font-display);font-weight:400;line-height:1.05;letter-spacing:-.015em;font-size:clamp(36px,5.5vw,60px)}
+.display em{font-style:italic;color:var(--gold-deep)}
+.lead{max-width:620px;margin:18px auto 0;color:var(--ink-2);font-size:18px}
+
+/* card */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh-lg);padding:32px;margin:36px auto 0;max-width:720px}
+.field-label{font-family:var(--font-mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.input-row{display:flex;gap:12px;flex-wrap:wrap}
+.url-input{flex:1;min-width:240px;padding:15px 18px;border:1px solid var(--line-2);border-radius:var(--r-md);background:var(--cream);font:inherit;color:var(--ink);transition:border-color .2s var(--ease)}
+.url-input:focus{outline:none;border-color:var(--gold)}
+.btn{padding:15px 28px;border-radius:var(--r-full);background:var(--espresso);color:var(--cream);font-weight:600;letter-spacing:.01em;transition:transform .15s var(--ease),background .2s}
+.btn:hover{background:#1c1710}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.hint{margin-top:14px;font-size:13.5px;color:var(--ink-3)}
+.err{margin-top:16px;padding:12px 16px;border-radius:var(--r-md);background:#fbe9e7;border:1px solid #f3c9c4;color:#8a2b22;font-size:14.5px;display:none}
+
+/* progress */
+.progress-wrap{display:none;margin-top:26px}
+.bar{height:8px;border-radius:var(--r-full);background:var(--sand);overflow:hidden}
+.bar > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-deep));border-radius:var(--r-full);transition:width .5s var(--ease)}
+.step{margin-top:12px;font-family:var(--font-mono);font-size:13px;color:var(--ink-2);display:flex;align-items:center;gap:10px}
+.spin{width:14px;height:14px;border:2px solid var(--gold-soft);border-top-color:var(--gold-deep);border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* results */
+.results{display:none;margin-top:40px}
+.results h2{font-family:var(--font-display);font-size:clamp(26px,3.5vw,38px);text-align:center;margin-bottom:6px}
+.results .sub{text-align:center;color:var(--ink-2);margin-bottom:28px}
+.room{margin-bottom:34px}
+.room-title{font-family:var(--font-mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:12px}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.tile{margin:0;background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+.tile img{width:100%;height:200px;object-fit:cover;background:var(--cream-2);display:block}
+.tile.is-orig{outline:2px solid var(--line-2)}
+.tile .meta{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px}
+.tile .cap{font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2)}
+.dl{font-size:11px;font-weight:600;letter-spacing:.03em;color:var(--gold-deep);border:1px solid var(--line-2);border-radius:var(--r-full);padding:4px 10px;background:var(--cream);white-space:nowrap}
+.dl:hover{background:var(--gold-soft)}
+.cta-row{text-align:center;margin-top:18px}
+.footer{padding:40px 0;text-align:center;color:var(--ink-3);font-size:13px}
+@media(max-width:560px){.tile img{height:170px}}
+</style>
+</head>
+<body>
+<header class="site-head">
+  <div class="container head-inner">
+    <a class="brand" href="index.html">staged<span class="dot">.</span><em>ai</em></a>
+    <div class="auth-area">
+      <button id="authbtn" class="authbtn">Accedi / Registrati</button>
+      <span id="userbox" class="userbox" hidden><span id="useremail"></span> · <button id="logoutbtn" class="linkbtn">Esci</button></span>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <span class="eyebrow">Importa da immobiliare.it</span>
+    <h1 class="display">Incolla il link.<br>Ottieni lo <em>staging</em>.</h1>
+    <p class="lead">Inserisci l'URL di un annuncio immobiliare.it: l'AI seleziona le foto migliori e genera in automatico le versioni con home staging virtuale.</p>
+  </section>
+
+  <section class="card" aria-label="Importa annuncio">
+    <div class="field-label">URL annuncio</div>
+    <div class="input-row">
+      <input id="url" class="url-input" type="url" inputmode="url"
+             placeholder="https://www.immobiliare.it/annunci/124428175/" autocomplete="off">
+      <button id="go" class="btn">Genera staging</button>
+    </div>
+    <p class="hint">Serve l'accesso. Incolla un link di immobiliare.it — l'elaborazione richiede circa 1–2 minuti.</p>
+    <div id="err" class="err"></div>
+
+    <div id="progress" class="progress-wrap">
+      <div class="bar"><i id="barfill"></i></div>
+      <div class="step"><span class="spin"></span><span id="steptxt">Avvio…</span></div>
+    </div>
+  </section>
+
+  <section id="results" class="results">
+    <h2>Ecco il tuo staging</h2>
+    <p class="sub" id="results-sub"></p>
+    <div id="rooms"></div>
+    <div class="cta-row"><a id="openproj" class="btn" href="#">Apri il progetto completo</a></div>
+  </section>
+</main>
+
+<div id="authmodal" class="modal" aria-hidden="true">
+  <div class="modal-card">
+    <button class="mclose" id="mclose" aria-label="Chiudi">×</button>
+    <h3>Accedi o registrati</h3>
+    <p class="msub">Serve un account per generare e poter modificare i tuoi progetti.</p>
+    <input id="memail" type="email" placeholder="Email" autocomplete="email">
+    <input id="mpass" type="password" placeholder="Password (min 6 caratteri)" autocomplete="current-password">
+    <div class="mrow">
+      <button class="btn" id="mlogin">Accedi</button>
+      <button class="btn btn-ghost" id="mregister">Registrati</button>
+    </div>
+    <div class="divider">oppure</div>
+    <button class="gbtn" id="mgoogle">Continua con Google</button>
+    <div class="merr" id="merr"></div>
+  </div>
+</div>
+
+<footer class="footer container">staged.ai — home staging AI per il real estate</footer>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword,
+  createUserWithEmailAndPassword, onAuthStateChanged, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyANmCpxue93WPqCahwfYvbMvXF8lZx53L8",
+  authDomain: "staged-ai.firebaseapp.com",
+  projectId: "staged-ai",
+  storageBucket: "staged-ai.firebasestorage.app",
+  messagingSenderId: "316036583182",
+  appId: "1:316036583182:web:f5614415de0adebeb1915f"
+};
+const auth = getAuth(initializeApp(firebaseConfig));
+
+const BACKEND_URL = 'https://homestager-backend-833352316081.europe-west1.run.app';
+const STAGED_TOKEN = 'hs_beta_2025_v1';
+let currentUser = null;
+
+const $ = id => document.getElementById(id);
+const elUrl=$('url'), elGo=$('go'), elErr=$('err'), elProg=$('progress'),
+      elBar=$('barfill'), elStep=$('steptxt'), elResults=$('results'),
+      elRooms=$('rooms'), elSub=$('results-sub'), elOpen=$('openproj');
+
+function showErr(msg){ elErr.textContent = msg; elErr.style.display='block'; }
+function clearErr(){ elErr.style.display='none'; }
+function setBusy(b){ elGo.disabled=b; elUrl.disabled=b; elGo.textContent = b ? 'Elaborazione…' : 'Genera staging'; }
+
+async function start(){
+  clearErr(); elResults.style.display='none'; elRooms.innerHTML='';
+  if(!currentUser){ openModal(); return; }
+  const url = elUrl.value.trim();
+  if(!/^https?:\/\/(www\.)?immobiliare\.it\//i.test(url)){
+    showErr('Inserisci un URL valido di immobiliare.it (es. https://www.immobiliare.it/annunci/…).');
+    return;
+  }
+  setBusy(true);
+  elProg.style.display='block'; elBar.style.width='4%'; elStep.textContent='Avvio…';
+  try{
+    const res = await fetch(BACKEND_URL + '/import-listing', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-Staged-Token':STAGED_TOKEN},
+      body: JSON.stringify({ url, userId: currentUser.uid })
+    });
+    if(res.status === 401){ throw new Error('Accesso non autorizzato (token).'); }
+    const data = await res.json();
+    if(!res.ok || !data.job_id){ throw new Error(data.detail || 'Errore di avvio.'); }
+    poll(data.job_id);
+  }catch(e){
+    setBusy(false); elProg.style.display='none';
+    showErr('Impossibile avviare: ' + e.message);
+  }
+}
+
+function poll(jobId){
+  let tries = 0;
+  const t = setInterval(async () => {
+    tries++;
+    if(tries > 150){ clearInterval(t); setBusy(false); showErr('Timeout: riprova tra qualche minuto.'); return; }
+    try{
+      const s = await (await fetch(BACKEND_URL + '/import-status/' + jobId)).json();
+      if(typeof s.progress === 'number'){ elBar.style.width = Math.max(4, s.progress) + '%'; }
+      if(s.step){ elStep.textContent = s.step; }
+      if(s.status === 'completed'){ clearInterval(t); done(s); }
+      else if(s.status === 'error'){ clearInterval(t); setBusy(false); elProg.style.display='none'; showErr(s.error || 'Elaborazione fallita.'); }
+    }catch(e){ /* transient: continua il polling */ }
+  }, 2000);
+}
+
+function done(s){
+  setBusy(false);
+  elBar.style.width='100%'; elStep.textContent='Completato';
+  setTimeout(()=>{ elProg.style.display='none'; }, 600);
+  const rooms = s.rooms || [];
+  elSub.textContent = rooms.length + ' stanze elaborate · progetto ' + s.projectId;
+  elRooms.innerHTML = rooms.map((r, ri) => {
+    const tiles = [];
+    // Originale
+    tiles.push(tile(r.origUrl, 'Originale', `${r.roomType||'stanza'}-originale`, true));
+    // Varianti generate
+    (r.variants || []).forEach(v => {
+      if(v.url) tiles.push(tile(v.url, v.label||v.finalita, `${r.roomType||'stanza'}-${v.finalita}`, false));
+    });
+    return `<div class="room">
+      <div class="room-title">${r.roomType||'stanza'}</div>
+      <div class="vgrid">${tiles.join('')}</div>
+    </div>`;
+  }).join('');
+  // Link al progetto nell'app (app.html nella stessa cartella di hosting)
+  elOpen.href = './app.html?project=' + encodeURIComponent(s.projectId);
+  elResults.style.display='block';
+  elResults.scrollIntoView({behavior:'smooth'});
+}
+
+function tile(url, caption, filename, isOrig){
+  if(!url) return '';
+  return `<figure class="tile${isOrig?' is-orig':''}">
+    <img src="${url}" alt="${caption}" loading="lazy">
+    <div class="meta">
+      <span class="cap">${caption}</span>
+      <button class="dl" data-url="${url}" data-name="${filename}.jpg">Scarica</button>
+    </div>
+  </figure>`;
+}
+
+// Download (fetch->blob; fallback: apre in nuova scheda se CORS lo blocca)
+elRooms.addEventListener('click', async (e) => {
+  const b = e.target.closest('.dl'); if(!b) return;
+  const url = b.getAttribute('data-url'); const name = b.getAttribute('data-name') || 'staged.jpg';
+  const old = b.textContent; b.textContent = '…';
+  try{
+    const resp = await fetch(url); const blob = await resp.blob();
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
+  }catch(err){ window.open(url, '_blank'); }
+  b.textContent = old;
+});
+
+// ── AUTH ──────────────────────────────────────────────────────────────────
+const authModal=$('authmodal'), authBtn=$('authbtn'), userBox=$('userbox'),
+      userEmail=$('useremail'), logoutBtn=$('logoutbtn'),
+      mEmail=$('memail'), mPass=$('mpass'), mErr=$('merr');
+
+function openModal(){ mErr.textContent=''; authModal.classList.add('open'); }
+function closeModal(){ authModal.classList.remove('open'); }
+function mapAuthError(e){
+  const c=(e&&e.code)||'';
+  if(c.includes('invalid-credential')||c.includes('wrong-password')) return 'Email o password non corretti.';
+  if(c.includes('email-already-in-use')) return 'Email già registrata: usa Accedi.';
+  if(c.includes('weak-password')) return 'Password troppo corta (min 6 caratteri).';
+  if(c.includes('invalid-email')) return 'Email non valida.';
+  if(c.includes('popup-closed-by-user')||c.includes('cancelled-popup')) return 'Accesso Google annullato.';
+  return 'Errore: ' + ((e&&e.message)||c);
+}
+function authErr(e){ mErr.textContent = mapAuthError(e); }
+
+$('mclose').addEventListener('click', closeModal);
+authModal.addEventListener('click', e => { if(e.target===authModal) closeModal(); });
+authBtn.addEventListener('click', openModal);
+logoutBtn.addEventListener('click', () => signOut(auth));
+$('mlogin').addEventListener('click', async () => { try{ await signInWithEmailAndPassword(auth, mEmail.value.trim(), mPass.value); }catch(e){ authErr(e); } });
+$('mregister').addEventListener('click', async () => { try{ await createUserWithEmailAndPassword(auth, mEmail.value.trim(), mPass.value); }catch(e){ authErr(e); } });
+$('mgoogle').addEventListener('click', async () => { try{ await signInWithPopup(auth, new GoogleAuthProvider()); }catch(e){ authErr(e); } });
+
+onAuthStateChanged(auth, user => {
+  currentUser = user;
+  if(user){
+    authBtn.hidden = true; userBox.hidden = false;
+    userEmail.textContent = user.email || 'Account';
+    closeModal();
+  } else {
+    authBtn.hidden = false; userBox.hidden = true;
+  }
+});
+
+elGo.addEventListener('click', start);
+elUrl.addEventListener('keydown', e => { if(e.key==='Enter') start(); });
+</script>
+</body>
+</html>
