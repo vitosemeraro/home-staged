@@ -70,3 +70,6 @@
   .seo-page .topbar__right { gap: 8px; }
   .seo-page .topbar__right .lang { display: none; }
 }
+.table-wrap caption { caption-side: top; text-align: left; padding: 0 0 10px; font-weight: 600; color: var(--ink-2, inherit); }
+.prose tbody th { font-weight: 600; }
+.table-source { font-size: 14px; color: var(--ink-3, inherit); }
