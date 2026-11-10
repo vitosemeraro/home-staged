@@ -337,6 +337,7 @@
         var b = e.target.closest('.ba-tab'); if (!b) return;
         tabs.querySelectorAll('.ba-tab').forEach(function (x) { x.classList.toggle('is-on', x === b); });
         var img = b.getAttribute('data-img'); if (after && img) after.src = img;
+        var alt = b.getAttribute('data-alt'); if (after && alt) after.alt = alt;
       });
     });
   }
