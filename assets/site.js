@@ -13,9 +13,7 @@
   var GTM_ID = 'GTM-MX9H34XN';      // tag manager (Clarity/other tags)
   var GA4_ID = 'G-0QMKLSND59';      // GA4 property for the institutional site
   var CLARITY_ID = 'wifg72oiw0';
-  var CONSENT_KEY = 'hs_cookie_consent';
-  var CONSENT_VERSION = 1;
-
+  
   /* ============================================================
      1 · NAV — mobile burger + dropdown
      ============================================================ */
@@ -133,133 +131,10 @@
   }
 
   /* ============================================================
-     6 · ANALYTICS LOADERS — only after consent
+     6-7 · CONSENT — gestito da /assets/consent.js (banner unico, Consent Mode v2)
      ============================================================ */
-  function loadGTM() {
-    if (window._gtmLoaded) return; window._gtmLoaded = true;
-    (function (w, d, s, l, i) {
-      w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-      var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
-      j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-      f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', GTM_ID);
-    var ns = document.createElement('noscript');
-    var ifr = document.createElement('iframe');
-    ifr.src = 'https://www.googletagmanager.com/ns.html?id=' + GTM_ID;
-    ifr.height = '0'; ifr.width = '0'; ifr.style.display = 'none'; ifr.style.visibility = 'hidden';
-    ns.appendChild(ifr); document.body.appendChild(ns);
-  }
-  function loadClarity() {
-    if (window._clarityLoaded) return; window._clarityLoaded = true;
-    (function (c, l, a, r, i, t, y) {
-      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
-      t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
-      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
-    })(window, document, 'clarity', 'script', CLARITY_ID);
-  }
-  function loadGA4() {
-    if (window._ga4Loaded) return; window._ga4Loaded = true;
-    var s = document.createElement('script'); s.async = true;
-    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA4_ID;
-    document.head.appendChild(s);
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
-    window.gtag('js', new Date());
-    window.gtag('config', GA4_ID);
-  }
-  function enableAnalytics() { loadGTM(); loadGA4(); loadClarity(); }
-
-  /* ============================================================
-     7 · CONSENT STATE + BANNER + MODAL
-     ============================================================ */
-  function readConsent() {
-    try { var c = JSON.parse(localStorage.getItem(CONSENT_KEY)); return (c && c.v === CONSENT_VERSION) ? c : null; }
-    catch (e) { return null; }
-  }
-  function saveConsent(analytics) {
-    var c = { v: CONSENT_VERSION, analytics: !!analytics, ts: new Date().toISOString() };
-    try { localStorage.setItem(CONSENT_KEY, JSON.stringify(c)); } catch (e) {}
-    return c;
-  }
-
-  var T = EN ? {
-    bannerText: 'We use technical cookies (always on) and, with your consent, analytics cookies (Google Analytics and Microsoft Clarity) to improve the site. Details in the ',
-    cookiePolicy: 'Cookie Policy', cookieHref: 'cookie-policy.html',
-    acceptAll: 'Accept all', techOnly: 'Technical only', customize: 'Customise',
-    prefTitle: 'Cookie preferences',
-    prefIntro: 'Choose which categories to enable. Technical cookies are required for the site to work and cannot be turned off.',
-    techName: 'Technical cookies', techDesc: 'Required for navigation and security. Always on.',
-    anName: 'Analytics cookies', anDesc: 'Google Analytics 4 (via GTM) and Microsoft Clarity. Anonymous, aggregated usage statistics.',
-    cancel: 'Cancel', save: 'Save preferences'
-  } : {
-    bannerText: 'Usiamo cookie tecnici (sempre attivi) e, con il tuo consenso, cookie analitici (Google Analytics e Microsoft Clarity) per migliorare il sito. Dettagli nella ',
-    cookiePolicy: 'Cookie Policy', cookieHref: 'cookie-policy.html',
-    acceptAll: 'Accetta tutto', techOnly: 'Solo tecnici', customize: 'Personalizza',
-    prefTitle: 'Preferenze cookie',
-    prefIntro: 'Scegli quali categorie attivare. I cookie tecnici sono necessari al funzionamento del sito e non possono essere disattivati.',
-    techName: 'Cookie tecnici', techDesc: 'Necessari per la navigazione e la sicurezza. Sempre attivi.',
-    anName: 'Cookie analitici', anDesc: 'Google Analytics 4 (via GTM) e Microsoft Clarity. Statistiche di utilizzo anonime e aggregate.',
-    cancel: 'Annulla', save: 'Salva preferenze'
-  };
-  // EN pages live under /en/, so cookie-policy is a sibling there too
-  var ckHref = (location.pathname.indexOf('/en/') !== -1) ? 'cookie-policy.html' : 'cookie-policy.html';
-
-  function buildBanner() {
-    var b = document.createElement('div');
-    b.className = 'ck-banner'; b.setAttribute('role', 'dialog'); b.setAttribute('aria-label', T.prefTitle);
-    b.innerHTML =
-      '<p>' + T.bannerText + '<a href="' + ckHref + '">' + T.cookiePolicy + '</a>.</p>' +
-      '<div class="ck-actions">' +
-      '<button class="btn btn--primary btn--sm" data-ck="all">' + T.acceptAll + '</button>' +
-      '<button class="btn btn--outline btn--sm" data-ck="tech">' + T.techOnly + '</button>' +
-      '<button class="ck-link" data-ck="custom">' + T.customize + '</button>' +
-      '</div>';
-    document.body.appendChild(b);
-    b.addEventListener('click', function (e) {
-      var act = e.target.getAttribute('data-ck');
-      if (act === 'all') { saveConsent(true); enableAnalytics(); removeBanner(); }
-      else if (act === 'tech') { saveConsent(false); removeBanner(); }
-      else if (act === 'custom') { removeBanner(); openModal(); }
-    });
-    window._ckBanner = b;
-  }
-  function removeBanner() {
-    if (window._ckBanner && window._ckBanner.parentNode) { window._ckBanner.parentNode.removeChild(window._ckBanner); window._ckBanner = null; }
-  }
-  function buildModal() {
-    if (window._ckModal) return window._ckModal;
-    var current = readConsent();
-    var checked = current && current.analytics ? 'checked' : '';
-    var ov = document.createElement('div');
-    ov.className = 'ck-overlay';
-    ov.innerHTML =
-      '<div class="ck-modal" role="dialog" aria-modal="true" aria-label="' + T.prefTitle + '">' +
-      '<h3>' + T.prefTitle + '</h3><p>' + T.prefIntro + '</p>' +
-      '<div class="ck-toggle"><div class="t-text"><strong>' + T.techName + '</strong><span>' + T.techDesc + '</span></div>' +
-      '<label class="ck-switch"><input type="checkbox" checked disabled><span class="track"></span></label></div>' +
-      '<div class="ck-toggle"><div class="t-text"><strong>' + T.anName + '</strong><span>' + T.anDesc + '</span></div>' +
-      '<label class="ck-switch"><input type="checkbox" id="ck-analytics" ' + checked + '><span class="track"></span></label></div>' +
-      '<div class="ck-modal-actions">' +
-      '<button class="btn btn--outline btn--sm" data-ck="cancel">' + T.cancel + '</button>' +
-      '<button class="btn btn--primary btn--sm" data-ck="save">' + T.save + '</button>' +
-      '</div></div>';
-    document.body.appendChild(ov);
-    ov.addEventListener('click', function (e) {
-      var act = e.target.getAttribute('data-ck');
-      if (e.target === ov || act === 'cancel') { closeModal(); }
-      else if (act === 'save') { var on = document.getElementById('ck-analytics').checked; saveConsent(on); if (on) enableAnalytics(); closeModal(); }
-    });
-    window._ckModal = ov; return ov;
-  }
-  function openModal() { buildModal().classList.add('show'); }
-  function closeModal() { if (window._ckModal) window._ckModal.classList.remove('show'); }
-  window.openCookieSettings = function () { openModal(); };
-
-  function initConsent() {
-    var c = readConsent();
-    if (c) { if (c.analytics) enableAnalytics(); }
-    else { buildBanner(); }
-  }
+  window.openCookieSettings = function () { if (window.cc) window.cc.open(); };
+  function initConsent() {}
 
   /* ============================================================
      8 · FORMSPREE — AJAX submit + validation + feedback
