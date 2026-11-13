@@ -7,6 +7,19 @@
 (function () {
   'use strict';
 
+  /* GA4 events: gtag sends only after consent (consent.js sets window.ccLoaded).
+     Key events in GA4: generate_lead, sign_up, contact_email. */
+  window.hsEvent = function (name, params) {
+    if (!window.ccLoaded || !window.gtag) return;
+    try { window.gtag('event', name, params || {}); } catch (e) {}
+  };
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a'); if (!a) return;
+    var h = a.getAttribute('href') || '';
+    if (h.indexOf('mailto:') === 0) window.hsEvent('contact_email', { link_url: h });
+    else if (/(^|\/)app\.html/.test(h)) window.hsEvent('click_app', { cta: a.getAttribute('data-event') || 'link' });
+  }, true);
+
   var EN = document.documentElement.lang === 'en';
 
   /* ---------- analytics IDs (README §13) ---------- */
@@ -159,6 +172,10 @@
           .then(function (res) {
             if (res.ok) {
               if (window.clarity) { try { window.clarity('event', form.getAttribute('data-event') || 'form_submit'); } catch (e) {} }
+              var fev = form.getAttribute('data-event') || 'form_submit';
+              window.hsEvent(fev);
+              if (fev === 'contact_submit') window.hsEvent('generate_lead', { form: 'contatti' });
+              if (fev === 'newsletter_signup') window.hsEvent('sign_up', { method: 'newsletter' });
               var redirect = form.getAttribute('data-redirect');
               if (redirect) { window.location.href = redirect; return; }
               form.reset();
