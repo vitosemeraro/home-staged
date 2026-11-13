@@ -207,7 +207,7 @@ Restituisci SOLO questo JSON:
       setTimeout(function () { resolve(); }, 5000);
     });
   }
-  function track(ev) { try { if (window.clarity) window.clarity('event', ev); if (window.dataLayer) window.dataLayer.push({ event: ev }); } catch (e) {} }
+  function track(ev) { try { if (window.clarity) window.clarity('event', ev); if (window.dataLayer) window.dataLayer.push({ event: ev }); if (window.hsEvent) { window.hsEvent(ev); if (ev === 'home_email_submitted') window.hsEvent('sign_up', { method: 'magic_link' }); } } catch (e) {} }
   function authHeaders() { return { 'Content-Type': 'application/json', 'X-Staged-Token': STAGED_SECRET, 'X-User-UID': getAnonId() }; }
 
   // ── image helpers ─────────────────────────────────────────
