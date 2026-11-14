@@ -58,7 +58,7 @@ Key facts: geometry lock (walls, doors, windows, floors, fitted kitchens and bat
 ## Product
 
 - [App](https://home-staged.ai/app.html)
-- [Home (IT)](https://home-staged.ai/index.html)
-- [Home (EN)](https://home-staged.ai/en/index.html)
+- [Home (IT)](https://home-staged.ai/)
+- [Home (EN)](https://home-staged.ai/en/)
 - [About](https://home-staged.ai/en/chi-siamo.html)
 - [Contact](https://home-staged.ai/en/contatti.html)

@@ -24,6 +24,18 @@
       "Nuovo Documento di testo.txt",
       ".claude/**",
       ".firebase/**"
+    ],
+    "redirects": [
+      {
+        "source": "/index.html",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/en/index.html",
+        "destination": "/en/",
+        "type": 301
+      }
     ]
   }
 }
