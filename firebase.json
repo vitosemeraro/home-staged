@@ -35,6 +35,16 @@
         "source": "/en/index.html",
         "destination": "/en/",
         "type": 301
+      },
+      {
+        "source": "/guide/index.html",
+        "destination": "/guide/",
+        "type": 301
+      },
+      {
+        "source": "/en/guides/index.html",
+        "destination": "/en/guides/",
+        "type": 301
       }
     ]
   }
