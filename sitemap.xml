@@ -4,7 +4,7 @@
 
   <url>
     <loc>https://home-staged.ai/</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="it" href="https://home-staged.ai/"/>
@@ -13,7 +13,7 @@
   </url>
   <url>
     <loc>https://home-staged.ai/en/</loc>
-    <lastmod>2026-06-05</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="it" href="https://home-staged.ai/"/>
@@ -498,7 +498,7 @@
   </url>
   <url>
     <loc>https://home-staged.ai/guide/</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="it" href="https://home-staged.ai/guide/"/>
@@ -507,7 +507,7 @@
   </url>
   <url>
     <loc>https://home-staged.ai/en/guides/</loc>
-    <lastmod>2026-10-04</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="it" href="https://home-staged.ai/guide/"/>
