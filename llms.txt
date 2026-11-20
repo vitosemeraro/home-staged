@@ -61,5 +61,10 @@ Key facts: geometry lock (walls, doors, windows, floors, fitted kitchens and bat
 - [App](https://home-staged.ai/app.html)
 - [Home (IT)](https://home-staged.ai/)
 - [Home (EN)](https://home-staged.ai/en/)
-- [About](https://home-staged.ai/en/chi-siamo.html)
-- [Contact](https://home-staged.ai/en/contatti.html)
+- [About (EN)](https://home-staged.ai/en/chi-siamo.html)
+- [Contact (EN)](https://home-staged.ai/en/contatti.html)
+
+## Chi siamo e contatti (Italiano)
+
+- [Chi siamo](https://home-staged.ai/chi-siamo.html): chi c'è dietro staged.ai. Vito Semeraro, AI Product Manager a Milano, l'ha ideato, disegnato e sviluppato da solo; storia, missione e roadmap pubblica.
+- [Contatti](https://home-staged.ai/contatti.html): come scrivere al team di staged.ai per una domanda, una demo o una collaborazione; risposta entro un giorno lavorativo.
