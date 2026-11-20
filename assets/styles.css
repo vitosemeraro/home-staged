@@ -567,3 +567,14 @@ p { margin: 0; }
 .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
 .reveal.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce){ .reveal { opacity:1; transform:none; transition:none; } }
+
+/* topbar fits 360–420px phones on every page (lang switch stays in the footer) — QA 20/11/2026 */
+@media (max-width: 480px) {
+  .topbar__right { gap: 8px; }
+  .topbar__right .lang { display: none; }
+}
+/* tabelle larghe scorrono dentro il loro riquadro sul telefono, la pagina no — QA 20/11/2026 */
+@media (max-width: 700px) {
+  .prose > table { display: block; overflow-x: auto; max-width: 100%; }
+  main td code { overflow-wrap: anywhere; }
+}
