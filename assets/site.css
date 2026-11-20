@@ -243,3 +243,14 @@ select.input {
 .center { text-align: center; }
 .mt-6 { margin-top: var(--s-6); }
 .mt-9 { margin-top: var(--s-9); }
+
+/* topbar fits 360–420px phones on every page (20/11/2026; lang switch stays in the footer) */
+@media (max-width: 480px) {
+  .topbar__right { gap: 8px; }
+  .topbar__right .lang { display: none; }
+}
+
+/* wide tables in legal pages scroll inside their box on phones (20/11/2026) */
+@media (max-width: 640px) {
+  .prose table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}

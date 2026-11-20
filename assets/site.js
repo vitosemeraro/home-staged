@@ -9,7 +9,22 @@
 
   /* GA4 events: gtag sends only after consent (consent.js sets window.ccLoaded).
      Key events in GA4: generate_lead, sign_up, contact_email. */
+  /* Contatore anonimo (20/11/2026, worker/ev.js = Worker Cloudflare "staged-ev"):
+     click_app, sign_up, generate_lead e contact_email partono anche senza consenso ai cookie,
+     perché non usano cookie e non mandano dati personali (solo evento, pagina, lingua e sorgente). */
+  var EV = 'https://staged-ev.cfdist2.workers.dev/ev';
+  var EV_NAMES = { click_app: 1, sign_up: 1, generate_lead: 1, contact_email: 1 };
+  function evCount(name, params) {
+    if (!EV_NAMES[name]) return;
+    try {
+      var p = params || {};
+      var body = JSON.stringify({ e: name, p: location.pathname, l: document.documentElement.lang || '', s: p.cta || p.method || p.form || '' });
+      if (navigator.sendBeacon) navigator.sendBeacon(EV, new Blob([body], { type: 'text/plain' }));
+      else fetch(EV, { method: 'POST', body: body, keepalive: true, mode: 'no-cors' });
+    } catch (e) {}
+  }
   window.hsEvent = function (name, params) {
+    evCount(name, params);
     if (!window.ccLoaded || !window.gtag) return;
     try { window.gtag('event', name, params || {}); } catch (e) {}
   };

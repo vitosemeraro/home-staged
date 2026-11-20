@@ -23,7 +23,8 @@
       "README.md",
       "Nuovo Documento di testo.txt",
       ".claude/**",
-      ".firebase/**"
+      ".firebase/**",
+      "worker/**"
     ],
     "redirects": [
       {
