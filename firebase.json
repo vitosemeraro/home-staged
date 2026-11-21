@@ -3,6 +3,7 @@
     "public": ".",
     "ignore": [
       "firebase.json",
+      "tools/**",
       "**/.*",
       "**/node_modules/**",
       "_handoff/**",
