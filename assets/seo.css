@@ -73,3 +73,8 @@
 .table-wrap caption { caption-side: top; text-align: left; padding: 0 0 10px; font-weight: 600; color: var(--ink-2, inherit); }
 .prose tbody th { font-weight: 600; }
 .table-source { font-size: 14px; color: var(--ink-3, inherit); }
+
+/* Foto ed esempi dentro le guide */
+.prose figure.seo-fig { margin: var(--s-5, 28px) 0; }
+.prose figure.seo-fig img { display: block; width: 100%; height: auto; border-radius: var(--r-md, 12px); }
+.prose figure.seo-fig figcaption { margin-top: 8px; font-size: 14px; line-height: 1.45; color: var(--ink-2, #555); }
