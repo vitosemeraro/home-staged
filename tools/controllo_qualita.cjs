@@ -20,6 +20,7 @@
  *   node controllo_qualita.cjs <https://url> [<https://url> ...]
  * Opzioni: --dominio https://sito.it (le URL assolute del sito si leggono dalla cartella locale), --out <cartella screenshot> (default ./qa-screenshot), --tutte (tutte le pagine HTML di --dir),
  *          --senza-screenshot (giro veloce: solo i controlli automatici)
+ * Controlla anche gli errori JavaScript del sito (pageerror): un preventivo o un modulo rotto è un ERRORE.
  * Esce con codice 1 se trova ERRORI (bloccano il push), 0 se ci sono solo AVVISI o niente.
  */
 const { chromium } = require('playwright');
@@ -95,6 +96,7 @@ async function analizza(vw) {
   const visti = new Map();
   for (const el of document.querySelectorAll(sel)) {
     if (!visibile(el) || fuoriContenuto(el)) continue;
+    if (el.closest('aside, [class*=sidebar], [class*=widget], [class*=related], [class*=seo-rel]')) continue; // colonne laterali e "articoli correlati" ripetono titoli per natura
     if (el.querySelector(sel)) continue; // solo il più interno
     const t = norm(el.innerText);
     if (t.length < 6) continue;
@@ -220,6 +222,9 @@ async function analizza(vw) {
       });
       const rotte = [];
       page.on('response', r => { if (r.status() >= 400 && r.request().resourceType() === 'image') rotte.push(r.url()); });
+      // errori JavaScript del sito (21/11/2026: un preventivo rotto da una variabile sovrascritta non lo vedeva nessuno)
+      const jsErr = [];
+      page.on('pageerror', e => { const st = String(e.stack || ''); if (!base || st.includes(base) || !/https?:\/\//.test(st)) jsErr.push(String(e.message).split('\n')[0].slice(0, 160)); });
       let res;
       try { res = await page.goto(url, { waitUntil: base ? 'load' : 'networkidle', timeout: 45000 }); }
       catch (e) { console.log(`  [${nome}] ERRORE: pagina non caricata (${e.message.split('\n')[0]})`); totErr++; await ctx.close(); continue; }
@@ -229,6 +234,7 @@ async function analizza(vw) {
       await page.waitForTimeout(400);
       const r = await page.evaluate(analizza, vw);
       for (const u of rotte) r.errori.push(`Immagine non trovata (HTTP 4xx): ${u.split('/').pop()}`);
+      for (const m of jsErr) r.errori.push(`Errore JavaScript nella pagina: ${m}`);
       const file = path.join(out, `${t.replace(/^https?:\/\//, '').replace(/[^a-z0-9]+/gi, '_').replace(/^_|_$/g, '') || 'home'}-${nome}.png`);
       if (foto) { await page.screenshot({ path: file, fullPage: true }); console.log(`  [${nome} ${vw}px] screenshot: ${file}`); }
       for (const e of [...new Set(r.errori)]) console.log(`    ERRORE: ${e}`);
