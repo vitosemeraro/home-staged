@@ -550,6 +550,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="it" href="https://home-staged.ai/guide/ristrutturazione-casa-100-mq.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://home-staged.ai/en/guides/cost-renovating-house-italy.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://home-staged.ai/guide/ristrutturazione-casa-100-mq.html"/>
   </url>
   <url>
@@ -565,5 +566,14 @@
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="it" href="https://home-staged.ai/guide/calcolo-costi-ristrutturazione-casa.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://home-staged.ai/guide/calcolo-costi-ristrutturazione-casa.html"/>
+  </url>
+  <url>
+    <loc>https://home-staged.ai/en/guides/cost-renovating-house-italy.html</loc>
+    <lastmod>2026-11-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="it" href="https://home-staged.ai/guide/ristrutturazione-casa-100-mq.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://home-staged.ai/en/guides/cost-renovating-house-italy.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://home-staged.ai/guide/ristrutturazione-casa-100-mq.html"/>
   </url>
 </urlset>
