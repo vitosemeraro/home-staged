@@ -13,16 +13,24 @@
      click_app, sign_up, generate_lead e contact_email partono anche senza consenso ai cookie,
      perché non usano cookie e non mandano dati personali (solo evento, pagina, lingua e sorgente). */
   var EV = 'https://staged-ev.cfdist2.workers.dev/ev';
-  var EV_NAMES = { click_app: 1, sign_up: 1, generate_lead: 1, contact_email: 1 };
+  /* 'view' (25/11/2026): una riga per pagina vista, con la sorgente (utm_source o sito di provenienza),
+     per avere il tasso visite → clic app anche senza cookie. Solo sui domini veri, non in locale. */
+  var EV_NAMES = { view: 1, click_app: 1, sign_up: 1, generate_lead: 1, contact_email: 1 };
   function evCount(name, params) {
     if (!EV_NAMES[name]) return;
     try {
       var p = params || {};
-      var body = JSON.stringify({ e: name, p: location.pathname, l: document.documentElement.lang || '', s: p.cta || p.method || p.form || '' });
+      var body = JSON.stringify({ e: name, p: location.pathname, l: document.documentElement.lang || '', s: String(p.cta || p.method || p.form || p.src || '').slice(0, 40) });
       if (navigator.sendBeacon) navigator.sendBeacon(EV, new Blob([body], { type: 'text/plain' }));
       else fetch(EV, { method: 'POST', body: body, keepalive: true, mode: 'no-cors' });
     } catch (e) {}
   }
+  function evSource() {
+    var u = (location.search.match(/[?&]utm_source=([^&#]*)/) || [])[1];
+    if (u) { try { return decodeURIComponent(u); } catch (e) { return u; } }
+    try { var r = document.referrer && new URL(document.referrer).hostname; return r && r !== location.hostname ? r.replace(/^www\./, '') : ''; } catch (e) { return ''; }
+  }
+  if (/(^|\.)home-staged\.ai$|^staged-ai\.(web\.app|firebaseapp\.com)$/.test(location.hostname)) evCount('view', { src: evSource() });
   window.hsEvent = function (name, params) {
     evCount(name, params);
     if (!window.ccLoaded || !window.gtag) return;

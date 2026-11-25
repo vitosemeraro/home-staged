@@ -4,10 +4,10 @@
 // Conta anche chi rifiuta i cookie, mentre GA4 parte solo dopo "Accetta".
 // Binding (impostato su Cloudflare, mai nel repository):
 //   DB  D1 "staged-events"  tabella events (ts, e, p, l, s, v)
-// POST /ev        {"e":"click_app","p":"/guide/…","l":"it","s":"hero"}  → 204
+// POST /ev        {"e":"view"|"click_app","p":"/guide/…","l":"it","s":"hero"}  → 204
 // GET  /ev-stats  ?days=35  → {"since":"AAAA-MM-GG","rows":[{day,e,p,l,s,n,v}]}
 
-const EVENTS = ['click_app', 'sign_up', 'generate_lead', 'contact_email'];
+const EVENTS = ['view', 'click_app', 'sign_up', 'generate_lead', 'contact_email'];  // 'view' dal 25/11/2026: una riga per pagina vista
 const ORIGINS = ['https://home-staged.ai', 'https://www.home-staged.ai', 'https://staged-ai.web.app', 'https://staged-ai.firebaseapp.com'];
 
 function cors(req) {
