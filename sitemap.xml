@@ -282,12 +282,20 @@
   </url>
   <url>
     <loc>https://home-staged.ai/guide/quanto-costa-home-staging.html</loc>
-    <lastmod>2026-11-22</lastmod>
+    <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="it" href="https://home-staged.ai/guide/quanto-costa-home-staging.html"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://home-staged.ai/en/guides/virtual-staging-cost.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://home-staged.ai/guide/quanto-costa-home-staging.html"/>
+  </url>
+  <url>
+    <loc>https://home-staged.ai/guide/costo-virtual-staging.html</loc>
+    <lastmod>2026-11-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="it" href="https://home-staged.ai/guide/costo-virtual-staging.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://home-staged.ai/en/guides/virtual-staging-cost.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://home-staged.ai/guide/costo-virtual-staging.html"/>
   </url>
   <url>
     <loc>https://home-staged.ai/en/guides/360-virtual-staging.html</loc>
@@ -303,12 +311,12 @@
   </url>
   <url>
     <loc>https://home-staged.ai/en/guides/virtual-staging-cost.html</loc>
-    <lastmod>2026-10-04</lastmod>
+    <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="it" href="https://home-staged.ai/guide/quanto-costa-home-staging.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://home-staged.ai/guide/costo-virtual-staging.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://home-staged.ai/en/guides/virtual-staging-cost.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://home-staged.ai/guide/quanto-costa-home-staging.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://home-staged.ai/guide/costo-virtual-staging.html"/>
   </url>
   <url>
     <loc>https://home-staged.ai/guide/home-staging-virtuale-vs-tradizionale.html</loc>
