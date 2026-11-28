@@ -419,7 +419,7 @@
   </url>
   <url>
     <loc>https://home-staged.ai/en/guides/renovation-costs-italy.html</loc>
-    <lastmod>2026-11-09</lastmod>
+    <lastmod>2026-11-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="it" href="https://home-staged.ai/guide/costi-ristrutturazione-al-mq.html"/>
@@ -527,7 +527,7 @@
   </url>
   <url>
     <loc>https://home-staged.ai/en/guides/</loc>
-    <lastmod>2026-11-27</lastmod>
+    <lastmod>2026-11-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="it" href="https://home-staged.ai/guide/"/>
@@ -589,5 +589,11 @@
     <xhtml:link rel="alternate" hreflang="it" href="https://home-staged.ai/guide/ristrutturazione-casa-100-mq.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://home-staged.ai/en/guides/cost-renovating-house-italy.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://home-staged.ai/guide/ristrutturazione-casa-100-mq.html"/>
+  </url>
+  <url>
+    <loc>https://home-staged.ai/en/guides/restore-farmhouse-tuscany-cost.html</loc>
+    <lastmod>2026-11-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>
